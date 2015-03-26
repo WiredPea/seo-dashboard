@@ -30,9 +30,6 @@ abstract class EntityWithUriCacheTagsTestBase extends EntityCacheTagsTestBase {
     // Selects the view mode that will be used.
     $view_mode = $this->selectViewMode($entity_type);
 
-    // The default cache contexts for rendered entities.
-    $entity_cache_contexts = ['theme', 'user.roles'];
-
     // Generate the standardized entity cache tags.
     $cache_tag = $this->entity->getCacheTags();
     $view_cache_tag = \Drupal::entityManager()->getViewBuilder($entity_type)->getCacheTags();
@@ -48,11 +45,10 @@ abstract class EntityWithUriCacheTagsTestBase extends EntityCacheTagsTestBase {
     // Also verify the existence of an entity render cache entry, if this entity
     // type supports render caching.
     if (\Drupal::entityManager()->getDefinition($entity_type)->isRenderCacheable()) {
-      $cache_keys = ['entity_view', $entity_type, $this->entity->id(), $view_mode];
-      $cid = $this->createCacheId($cache_keys, $entity_cache_contexts);
-      $redirected_cid = $this->createRedirectedCacheId($cache_keys, $entity_cache_contexts);
+      $cid = 'entity_view:' . $entity_type . ':' . $this->entity->id() . ':' . $view_mode . ':classy:r.anonymous:' . date_default_timezone_get();
+      $cache_entry = \Drupal::cache('render')->get($cid);
       $expected_cache_tags = Cache::mergeTags($cache_tag, $view_cache_tag, $this->getAdditionalCacheTagsForEntity($this->entity), array($render_cache_tag));
-      $this->verifyRenderCache($cid, $expected_cache_tags, $redirected_cid);
+      $this->verifyRenderCache($cid, $expected_cache_tags);
     }
 
     // Verify that after modifying the entity, there is a cache miss.

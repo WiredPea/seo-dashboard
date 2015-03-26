@@ -6,7 +6,7 @@ drupal.file:
     theme:
       css/file.admin.css: {}
     component:
-      css/file.theme.css: {}
+      css/file.formatter.generic.css: {}
   dependencies:
     - core/jquery
     - core/jquery.once
@@ -17,5 +17,5 @@ drupal.file.formatter.generic:
   version: VERSION
   css:
     theme:
-      css/file.theme.css: {}
+      css/file.formatter.generic.css: {}
 

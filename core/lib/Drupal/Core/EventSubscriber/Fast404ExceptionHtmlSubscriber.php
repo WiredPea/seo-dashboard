@@ -36,7 +36,7 @@ class Fast404ExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
   protected $configFactory;
 
   /**
-   * Constructs a new Fast404ExceptionHtmlSubscriber.
+   * Constructs a new CustomPageExceptionHtmlSubscriber.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.

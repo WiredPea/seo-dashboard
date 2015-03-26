@@ -15,7 +15,6 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\TestBase;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
 use Drupal\user\Entity\Role;
-use Drupal\user\RoleInterface;
 
 /**
  * Tests comment field level access.
@@ -79,7 +78,7 @@ class CommentFieldAccessTest extends EntityUnitTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installConfig(array('user', 'comment'));
+    $this->installConfig(array('user'));
     $this->installSchema('comment', array('comment_entity_statistics'));
   }
 
@@ -123,7 +122,7 @@ class CommentFieldAccessTest extends EntityUnitTestBase {
     // An unprivileged user.
     $comment_disabled_user = $this->createUser(['name' => 'disabled'], ['access content']);
 
-    $role = Role::load(RoleInterface::ANONYMOUS_ID);
+    $role = Role::load(DRUPAL_ANONYMOUS_RID);
     $role->grantPermission('post comments')
       ->save();
 

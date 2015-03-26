@@ -31,7 +31,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
   public $id;
 
   /**
-   * The field name.
+   * The name of the field attached to the bundle by this field.
    *
    * @var string
    */

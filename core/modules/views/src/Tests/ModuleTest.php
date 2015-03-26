@@ -30,7 +30,7 @@ class ModuleTest extends ViewUnitTestBase {
    *
    * @var array
    */
-  public static $modules = ['field', 'user', 'block'];
+  public static $modules = array('user', 'block');
 
   /**
    * Stores the last triggered error, for example via debug().
@@ -142,7 +142,7 @@ class ModuleTest extends ViewUnitTestBase {
    * Tests the load wrapper/helper functions.
    */
   public function testLoadFunctions() {
-    $this->enableModules(array('field', 'text', 'node'));
+    $this->enableModules(array('node'));
     $this->installConfig(array('node'));
     $storage = $this->container->get('entity.manager')->getStorage('view');
 

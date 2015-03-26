@@ -8,7 +8,6 @@
 namespace Drupal\node\Tests\Config;
 
 use Drupal\field\Entity\FieldConfig;
-use Drupal\node\Entity\NodeType;
 use Drupal\simpletest\KernelTestBase;
 
 /**
@@ -30,7 +29,6 @@ class NodeImportCreateTest extends KernelTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installSchema('system', array('router'));
     $this->installEntitySchema('user');
 
     // Set default storage backend.
@@ -44,12 +42,12 @@ class NodeImportCreateTest extends KernelTestBase {
     $node_type_id = 'default';
 
     // Check that the content type does not exist yet.
-    $this->assertFalse(NodeType::load($node_type_id));
+    $this->assertFalse(entity_load('node_type', $node_type_id));
 
     // Enable node_test_config module and check that the content type
     // shipped in the module's default config is created.
     $this->container->get('module_installer')->install(array('node_test_config'));
-    $node_type = NodeType::load($node_type_id);
+    $node_type = entity_load('node_type', $node_type_id);
     $this->assertTrue($node_type, 'The default content type was created.');
   }
 
@@ -73,7 +71,7 @@ class NodeImportCreateTest extends KernelTestBase {
     $this->configImporter()->import();
 
     // Check that the content type was created.
-    $node_type = NodeType::load($node_type_id);
+    $node_type = entity_load('node_type', $node_type_id);
     $this->assertTrue($node_type, 'Import node type from staging was created.');
     $this->assertFalse(FieldConfig::loadByName('node', $node_type_id, 'body'));
   }

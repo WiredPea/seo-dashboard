@@ -25,11 +25,6 @@ abstract class RelationshipJoinTestBase extends PluginUnitTestBase {
   public static $modules = array('system', 'user', 'field');
 
   /**
-   * @var \Drupal\user\Entity\User
-   */
-  protected $rootUser;
-
-  /**
    * Overrides \Drupal\views\Tests\ViewUnitTestBase::setUpFixtures().
    */
   protected function setUpFixtures() {
@@ -38,8 +33,9 @@ abstract class RelationshipJoinTestBase extends PluginUnitTestBase {
     parent::setUpFixtures();
 
     // Create a record for uid 1.
-    $this->rootUser = entity_create('user', array('name' => $this->randomMachineName()));
-    $this->rootUser->save();
+    $this->installSchema('system', 'sequences');
+    $root_user = entity_create('user', array('name' => $this->randomMachineName()));
+    $root_user->save();
 
     Views::viewsData()->clear();
   }
@@ -53,7 +49,7 @@ abstract class RelationshipJoinTestBase extends PluginUnitTestBase {
     $schema = parent::schemaDefinition();
 
     $schema['views_test_data']['fields']['uid'] = array(
-      'description' => "The {users_field_data}.uid of the author of the beatle entry.",
+      'description' => "The {users}.uid of the author of the beatle entry.",
       'type' => 'int',
       'unsigned' => TRUE,
       'not null' => TRUE,
@@ -75,7 +71,7 @@ abstract class RelationshipJoinTestBase extends PluginUnitTestBase {
       'help' => t('The test data UID'),
       'relationship' => array(
         'id' => 'standard',
-        'base' => 'users_field_data',
+        'base' => 'users',
         'base field' => 'uid'
       )
     );

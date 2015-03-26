@@ -23,7 +23,7 @@
    */
   Drupal.behaviors.tour = {
     attach: function (context) {
-      $('body').once('tour').each(function() {
+      $('body').once('tour', function (index, element) {
         var model = new Drupal.tour.models.StateModel();
         new Drupal.tour.views.ToggleTourView({
           el: $(context).find('#toolbar-tab-tour'),
@@ -42,6 +42,7 @@
         if (/tour=?/i.test(queryString)) {
           model.set('isActive', true);
         }
+
       });
     }
   };

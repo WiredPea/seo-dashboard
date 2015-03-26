@@ -14,7 +14,6 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Render\RendererInterface;
-use Drupal\Core\Routing\RedirectDestinationInterface;
 use Drupal\views\Ajax\ScrollTopCommand;
 use Drupal\views\Ajax\ViewAjaxResponse;
 use Drupal\views\ViewExecutableFactory;
@@ -57,13 +56,6 @@ class ViewAjaxController implements ContainerInjectionInterface {
   protected $currentPath;
 
   /**
-   * The redirect destination.
-   *
-   * @var \Drupal\Core\Routing\RedirectDestinationInterface
-   */
-  protected $redirectDestination;
-
-  /**
    * Constructs a ViewAjaxController object.
    *
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
@@ -74,15 +66,12 @@ class ViewAjaxController implements ContainerInjectionInterface {
    *   The renderer.
    * @param \Drupal\Core\Path\CurrentPathStack $current_path
    *   The current path.
-   * @param \Drupal\Core\Routing\RedirectDestinationInterface $redirect_destination
-   *   The redirect destination.
    */
-  public function __construct(EntityStorageInterface $storage, ViewExecutableFactory $executable_factory, RendererInterface $renderer, CurrentPathStack $current_path, RedirectDestinationInterface $redirect_destination) {
+  public function __construct(EntityStorageInterface $storage, ViewExecutableFactory $executable_factory, RendererInterface $renderer, CurrentPathStack $current_path) {
     $this->storage = $storage;
     $this->executableFactory = $executable_factory;
     $this->renderer = $renderer;
     $this->currentPath = $current_path;
-    $this->redirectDestination = $redirect_destination;
   }
 
   /**
@@ -93,8 +82,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
       $container->get('entity.manager')->getStorage('view'),
       $container->get('views.executable'),
       $container->get('renderer'),
-      $container->get('path.current'),
-      $container->get('redirect.destination')
+      $container->get('path.current')
     );
   }
 
@@ -163,7 +151,8 @@ class ViewAjaxController implements ContainerInjectionInterface {
         if ($query != '') {
           $origin_destination .= '?' . $query;
         }
-        $this->redirectDestination->set($origin_destination);
+        $destination = &drupal_static('drupal_get_destination');
+        $destination = array('destination' => $origin_destination);
 
         // Override the display's pager_element with the one actually used.
         if (isset($pager_element)) {

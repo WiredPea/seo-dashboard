@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core\Routing;
 
+use Drupal\Core\ContentNegotiation;
 use Drupal\Core\Routing\AcceptHeaderMatcher;
 use Drupal\Tests\Core\Routing\RoutingFixtures;
 use Drupal\Tests\UnitTestCase;
@@ -40,7 +41,7 @@ class AcceptHeaderMatcherTest extends UnitTestCase {
     parent::setUp();
 
     $this->fixtures = new RoutingFixtures();
-    $this->matcher = new AcceptHeaderMatcher();
+    $this->matcher = new AcceptHeaderMatcher(new ContentNegotiation());
   }
 
   /**
@@ -49,14 +50,14 @@ class AcceptHeaderMatcherTest extends UnitTestCase {
    * @see Drupal\Tests\Core\Routing\AcceptHeaderMatcherTest::testAcceptFiltering()
    */
   public function acceptFilterProvider() {
-    return [
+    return array(
       // Check that JSON routes get filtered and prioritized correctly.
-      ['application/json, text/xml;q=0.9', 'json', 'route_c', 'route_e'],
+      array('application/json, text/xml;q=0.9', 'route_c', 'route_e'),
       // Tests a JSON request with alternative JSON MIME type Accept header.
-      ['application/x-json, text/xml;q=0.9', 'json', 'route_c', 'route_e'],
+      array('application/x-json, text/xml;q=0.9', 'route_c', 'route_e'),
       // Tests a standard HTML request.
-      ['text/html, text/xml;q=0.9', 'html', 'route_e', 'route_c'],
-    ];
+      array('text/html, text/xml;q=0.9', 'route_e', 'route_c'),
+    );
   }
 
   /**
@@ -64,8 +65,6 @@ class AcceptHeaderMatcherTest extends UnitTestCase {
    *
    * @param string $accept_header
    *   The HTTP Accept header value of the request.
-   * @param string $format
-   *   The request format.
    * @param string $included_route
    *   The route name that should survive the filter and be ranked first.
    * @param string $excluded_route
@@ -73,12 +72,11 @@ class AcceptHeaderMatcherTest extends UnitTestCase {
    *
    * @dataProvider acceptFilterProvider
    */
-  public function testAcceptFiltering($accept_header, $format, $included_route, $excluded_route) {
+  public function testAcceptFiltering($accept_header, $included_route, $excluded_route) {
     $collection = $this->fixtures->sampleRouteCollection();
 
     $request = Request::create('path/two', 'GET');
     $request->headers->set('Accept', $accept_header);
-    $request->setRequestFormat($format);
     $routes = $this->matcher->filter($collection, $request);
     $this->assertEquals(count($routes), 4, 'The correct number of routes was found.');
     $this->assertNotNull($routes->get($included_route), "Route $included_route was found when matching $accept_header.");
@@ -105,8 +103,6 @@ class AcceptHeaderMatcherTest extends UnitTestCase {
 
     $request = Request::create('path/two', 'GET');
     $request->headers->set('Accept', 'application/json, text/xml;q=0.9');
-    $request->setRequestFormat('json');
-    $this->matcher->filter($routes, $request);
     $this->matcher->filter($routes, $request);
     $this->fail('No exception was thrown.');
   }

@@ -39,13 +39,7 @@ class SimplePageVariant extends VariantBase implements PageVariantInterface {
    */
   public function build() {
     $build = [
-      'content' => [
-        'main_content' => $this->mainContent,
-        'messages' => [
-          '#type' => 'status_messages',
-          '#weight' => -1000,
-        ],
-      ],
+      'content' => $this->mainContent,
     ];
     return $build;
   }

@@ -25,7 +25,7 @@ use Drupal\Core\TypedData\Type\DurationInterface;
  *
  * @see \Drupal\Core\TypedData\Type\DurationIso8601
  */
-class TimeSpan extends IntegerData implements DurationInterface {
+class TimeSpan extends Integer implements DurationInterface {
 
   /**
    * {@inheritdoc}

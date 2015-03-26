@@ -7,7 +7,6 @@
 
 namespace Drupal\user\Tests\Views;
 
-use Drupal\user\RoleInterface;
 use Drupal\views\Views;
 
 /**
@@ -55,7 +54,7 @@ class BulkFormTest extends UserTestBase {
     // Assign a role to a user.
     $account = entity_load('user', $this->users[0]->id());
     $roles = user_role_names(TRUE);
-    unset($roles[RoleInterface::AUTHENTICATED_ID]);
+    unset($roles[DRUPAL_AUTHENTICATED_RID]);
     $role = key($roles);
 
     $this->assertFalse($account->hasRole($role), 'The user currently does not have a custom role.');

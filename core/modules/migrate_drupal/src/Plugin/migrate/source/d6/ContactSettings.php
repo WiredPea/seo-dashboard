@@ -18,7 +18,7 @@ class ContactSettings extends Variable {
   /**
    * {@inheritdoc}
    */
-  function initializeIterator() {
+  function runQuery() {
     $default_category = $this->select('contact', 'c')
       ->fields('c', array('cid'))
       ->condition('selected', 1)

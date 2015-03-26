@@ -786,7 +786,8 @@ class ConfigImporter {
 
     $this->setProcessedExtension($type, $op, $name);
     \Drupal::service('config.installer')
-      ->setSyncing(FALSE);
+      ->setSyncing(FALSE)
+      ->resetSourceStorage();
   }
 
   /**

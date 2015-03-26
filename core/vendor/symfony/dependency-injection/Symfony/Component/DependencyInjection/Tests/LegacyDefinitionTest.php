@@ -13,9 +13,6 @@ namespace Symfony\Component\DependencyInjection\Tests;
 
 use Symfony\Component\DependencyInjection\Definition;
 
-/**
- * @group legacy
- */
 class LegacyDefinitionTest extends \PHPUnit_Framework_TestCase
 {
     public function testSetGetFactoryClass()

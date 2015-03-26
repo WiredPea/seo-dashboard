@@ -8,11 +8,12 @@
 namespace Drupal\node;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
 
 /**
  * Provides an interface defining a node type entity.
  */
-interface NodeTypeInterface extends ConfigEntityInterface {
+interface NodeTypeInterface extends ConfigEntityInterface, ThirdPartySettingsInterface {
 
   /**
    * Determines whether the node type is locked.

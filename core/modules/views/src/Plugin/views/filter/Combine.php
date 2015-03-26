@@ -16,7 +16,7 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * @ViewsFilter("combine")
  */
-class Combine extends StringFilter {
+class Combine extends String {
 
   /**
    * @var views_plugin_query_default

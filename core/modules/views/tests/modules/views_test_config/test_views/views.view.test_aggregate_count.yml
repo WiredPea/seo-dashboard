@@ -1,4 +1,4 @@
-langcode: en
+langcode: und
 status: true
 dependencies: {  }
 id: test_aggregate_count
@@ -45,8 +45,7 @@ display:
           hide_empty: false
           id: id
           table: entity_test
-          plugin_id: field
-          type: number_integer
+          plugin_id: numeric
           entity_type: entity_test
           entity_field: id
       group_by: true

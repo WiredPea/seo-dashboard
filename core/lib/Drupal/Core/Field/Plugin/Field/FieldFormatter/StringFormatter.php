@@ -10,7 +10,6 @@ namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -25,7 +24,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   label = @Translation("Plain text"),
  *   field_types = {
  *     "string",
- *     "uri",
  *   },
  *   quickedit = {
  *     "editor" = "plain_text"
@@ -106,12 +104,12 @@ class StringFormatter extends FormatterBase implements ContainerFactoryPluginInt
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $summary = [];
+    $build = [];
     if ($this->getSetting('link_to_entity')) {
       $entity_type = $this->entityManager->getDefinition($this->fieldDefinition->getTargetEntityTypeId());
-      $summary[] = $this->t('Linked to the @entity_label', ['@entity_label' => $entity_type->getLabel()]);
+      $build['#markup'] = $this->t('Linked to the @entity_label', ['@entity_label' => $entity_type->getLabel()]);
     }
-    return $summary;
+    return $build;
   }
 
   /**
@@ -127,7 +125,9 @@ class StringFormatter extends FormatterBase implements ContainerFactoryPluginInt
     }
 
     foreach ($items as $delta => $item) {
-      $string = $this->viewValue($item);
+      // The text value has no text format assigned to it, so the user input
+      // should equal the output, including newlines.
+      $string = nl2br(String::checkPlain($item->value));
 
       if ($url) {
         $elements[$delta] = [
@@ -142,21 +142,6 @@ class StringFormatter extends FormatterBase implements ContainerFactoryPluginInt
     }
 
     return $elements;
-  }
-
-  /**
-   * Generate the output appropriate for one field item.
-   *
-   * @param \Drupal\Core\Field\FieldItemInterface $item
-   *   One field item.
-   *
-   * @return string
-   *   The textual output generated.
-   */
-  protected function viewValue(FieldItemInterface $item) {
-    // The text value has no text format assigned to it, so the user input
-    // should equal the output, including newlines.
-    return nl2br(String::checkPlain($item->value));
   }
 
 }

@@ -11,10 +11,7 @@ namespace Drupal\Core\Display\Annotation;
  * Defines a page display variant annotation object.
  *
  * Page display variants are a specific type of display variant, intended to
- * render entire pages. They must render the crucial parts of a page, which are:
- * - the title
- * - the main content
- * - any messages (#type => status_messages)
+ * render the main content of a page.
  *
  * @see \Drupal\Core\Display\VariantInterface
  * @see \Drupal\Core\Display\PageVariantInterface

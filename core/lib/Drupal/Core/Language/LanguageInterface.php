@@ -105,8 +105,7 @@ interface LanguageInterface {
    * Gets the name of the language.
    *
    * @return string
-   *   The human-readable name of the language (in the language that was
-   *   used to construct this object).
+   *   The human-readable English name of the language.
    */
   public function getName();
 

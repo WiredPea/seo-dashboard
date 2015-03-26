@@ -8,7 +8,6 @@
 namespace Drupal\filter\Tests;
 
 use Drupal\simpletest\KernelTestBase;
-use Drupal\user\RoleInterface;
 
 /**
  * Tests text format default configuration.
@@ -50,8 +49,8 @@ class FilterDefaultConfigTest extends KernelTestBase {
     $this->assertEqual($format->get('roles'), NULL);
     // Verify that the defined roles in the default config have been processed.
     $this->assertEqual(array_keys(filter_get_roles_by_format($format)), array(
-      RoleInterface::ANONYMOUS_ID,
-      RoleInterface::AUTHENTICATED_ID,
+      DRUPAL_ANONYMOUS_RID,
+      DRUPAL_AUTHENTICATED_RID,
     ));
 
     // Verify enabled filters.
@@ -79,21 +78,21 @@ class FilterDefaultConfigTest extends KernelTestBase {
     // Verify role permissions declared in default config.
     $format = entity_load('filter_format', 'filter_test');
     $this->assertEqual(array_keys(filter_get_roles_by_format($format)), array(
-      RoleInterface::ANONYMOUS_ID,
-      RoleInterface::AUTHENTICATED_ID,
+      DRUPAL_ANONYMOUS_RID,
+      DRUPAL_AUTHENTICATED_RID,
     ));
 
     // Attempt to change roles.
     $format->set('roles', array(
-      RoleInterface::AUTHENTICATED_ID,
+      DRUPAL_AUTHENTICATED_RID,
     ));
     $format->save();
 
     // Verify that roles have not been updated.
     $format = entity_load('filter_format', 'filter_test');
     $this->assertEqual(array_keys(filter_get_roles_by_format($format)), array(
-      RoleInterface::ANONYMOUS_ID,
-      RoleInterface::AUTHENTICATED_ID,
+      DRUPAL_ANONYMOUS_RID,
+      DRUPAL_AUTHENTICATED_RID,
     ));
   }
 

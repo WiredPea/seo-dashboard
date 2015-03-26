@@ -9,7 +9,6 @@ namespace Drupal\node\Tests;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\node\Entity\NodeType;
 
 /**
  * Tests node access functionality with multiple languages and two node access
@@ -50,7 +49,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
   protected function setUp() {
     parent::setUp();
 
-    node_access_test_add_field(NodeType::load('page'));
+    node_access_test_add_field(entity_load('node_type', 'page'));
 
     // Create the 'private' field, which allows the node to be marked as private
     // (restricted access) in a given translation.
@@ -59,6 +58,10 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
       'entity_type' => 'node',
       'type' => 'boolean',
       'cardinality' => 1,
+      'settings' => array(
+        'on_label' => 'Private',
+        'off_label' => 'Not private',
+      ),
     ));
     $field_storage->save();
 
@@ -67,10 +70,6 @@ class NodeAccessLanguageAwareCombinationTest extends NodeTestBase {
       'bundle' => 'page',
       'widget' => array(
         'type' => 'options_buttons',
-      ),
-      'settings' => array(
-        'on_label' => 'Private',
-        'off_label' => 'Not private',
       ),
     ))->save();
 

@@ -86,16 +86,14 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
   }
 
   /**
-   * Loads entity IDs using a pager sorted by the entity id.
+   * Loads entity IDs using a pager.
    *
    * @return array
    *   An array of entity IDs.
    */
   protected function getEntityIds() {
     $query = $this->getStorage()->getQuery();
-    $keys = $this->entityType->getKeys();
     return $query
-      ->sort($keys['id'])
       ->pager($this->limit)
       ->execute();
   }
@@ -218,9 +216,6 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
       '#title' => $this->getTitle(),
       '#rows' => array(),
       '#empty' => $this->t('There is no @label yet.', array('@label' => $this->entityType->getLabel())),
-      '#cache' => [
-        'contexts' => $this->entityType->getListCacheContexts(),
-      ],
     );
     foreach ($this->load() as $entity) {
       if ($row = $this->buildRow($entity)) {
@@ -228,7 +223,7 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
       }
     }
     $build['pager'] = array(
-      '#type' => 'pager',
+      '#theme' => 'pager',
     );
     return $build;
   }

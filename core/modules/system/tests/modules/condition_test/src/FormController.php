@@ -65,10 +65,8 @@ class FormController implements FormInterface {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->condition->submitConfigurationForm($form, $form_state);
     $config = $this->condition->getConfig();
-    foreach ($config['bundles'] as $bundle) {
-      drupal_set_message('Bundle: ' . $bundle);
-    }
-
+    $bundles = implode(' and ', $config['bundles']);
+    drupal_set_message(t('The bundles are @bundles', array('@bundles' => $bundles)));
     $article = Node::load(1);
     $this->condition->setContextValue('node', $article);
     if ($this->condition->execute()) {

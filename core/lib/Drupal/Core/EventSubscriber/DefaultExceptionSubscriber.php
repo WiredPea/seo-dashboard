@@ -10,6 +10,7 @@ namespace Drupal\Core\EventSubscriber;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\ContentNegotiation;
 use Drupal\Core\Render\BareHtmlPageRendererInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Utility\Error;
@@ -52,7 +53,7 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
   protected $bareHtmlPageRenderer;
 
   /**
-   * Constructs a new DefaultExceptionSubscriber.
+   * Constructs a new DefaultExceptionHtmlSubscriber.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.
@@ -135,7 +136,6 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
 
     if ($exception instanceof HttpExceptionInterface) {
       $response->setStatusCode($exception->getStatusCode());
-      $response->headers->add($exception->getHeaders());
     }
     else {
       $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR, '500 Service unavailable (with message)');
@@ -166,7 +166,6 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
     $response = new JsonResponse($data, Response::HTTP_INTERNAL_SERVER_ERROR);
     if ($exception instanceof HttpExceptionInterface) {
       $response->setStatusCode($exception->getStatusCode());
-      $response->headers->add($exception->getHeaders());
     }
 
     $event->setResponse($response);
@@ -205,7 +204,8 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
     // to this code. We therefore use this style for now on the expectation
     // that it will get replaced with better code later. This approach makes
     // that change easier when we get to it.
-    $format = \Drupal::service('http_negotiation.format_negotiator')->getContentType($request);
+    $conneg = new ContentNegotiation();
+    $format = $conneg->getContentType($request);
 
     // These are all JSON errors for our purposes. Any special handling for
     // them can/should happen in earlier listeners if desired.

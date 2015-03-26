@@ -173,8 +173,6 @@ class ConfigImporterTest extends KernelTestBase {
       'label' => 'New',
       'weight' => 0,
       'style' => '',
-      'size' => '',
-      'size_value' => '',
       'protected_property' => '',
     );
     $staging->write($dynamic_name, $original_dynamic_data);

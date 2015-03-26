@@ -36,6 +36,8 @@ class FieldApiDataTest extends FieldTestBase {
       );
       $nodes[] = $this->drupalCreateNode($edit);
     }
+
+    $this->container->get('views.views_data')->clear();
   }
 
   /**
@@ -59,11 +61,12 @@ class FieldApiDataTest extends FieldTestBase {
 
     $this->assertTrue(isset($data[$current_table]));
     $this->assertTrue(isset($data[$revision_table]));
-    // The node field should join against node_field_data.
-    $this->assertTrue(isset($data[$current_table]['table']['join']['node_field_data']));
-    $this->assertTrue(isset($data[$revision_table]['table']['join']['node_field_revision']));
+    // The node field should join against node.
+    $this->assertTrue(isset($data[$current_table]['table']['join']['node']));
+    $this->assertTrue(isset($data[$revision_table]['table']['join']['node_revision']));
 
     $expected_join = array(
+      'left_table' => 'node_field_data',
       'left_field' => 'nid',
       'field' => 'entity_id',
       'extra' => array(
@@ -71,8 +74,9 @@ class FieldApiDataTest extends FieldTestBase {
         array('left_field' => 'langcode', 'field' => 'langcode'),
       ),
     );
-    $this->assertEqual($expected_join, $data[$current_table]['table']['join']['node_field_data']);
+    $this->assertEqual($expected_join, $data[$current_table]['table']['join']['node']);
     $expected_join = array(
+      'left_table' => 'node_field_revision',
       'left_field' => 'vid',
       'field' => 'revision_id',
       'extra' => array(
@@ -80,7 +84,7 @@ class FieldApiDataTest extends FieldTestBase {
         array('left_field' => 'langcode', 'field' => 'langcode'),
       ),
     );
-    $this->assertEqual($expected_join, $data[$revision_table]['table']['join']['node_field_revision']);
+    $this->assertEqual($expected_join, $data[$revision_table]['table']['join']['node_revision']);
 
     // Test click sortable.
     $this->assertTrue($data[$current_table][$field_storage->getName()]['field']['click sortable'], 'String field is click sortable.');

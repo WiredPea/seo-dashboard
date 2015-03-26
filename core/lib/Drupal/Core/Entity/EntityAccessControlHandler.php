@@ -121,9 +121,10 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
    * do their own custom access checking.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity for which to check access.
+   *   The entity for which to check 'create' access.
    * @param string $operation
-   *   The entity operation. Usually one of 'view', 'update' or 'delete'.
+   *   The entity operation. Usually one of 'view', 'update', 'create' or
+   *   'delete'.
    * @param string $langcode
    *   The language code for which to check access.
    * @param \Drupal\Core\Session\AccountInterface $account

@@ -6,9 +6,7 @@
 
 namespace Drupal\rdf\Tests\Field;
 
-use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
 use Drupal\user\Entity\Role;
-use Drupal\user\RoleInterface;
 
 /**
  * Tests the RDFa output of the entity reference field formatter.
@@ -16,8 +14,6 @@ use Drupal\user\RoleInterface;
  * @group rdf
  */
 class EntityReferenceRdfaTest extends FieldRdfaTestBase {
-
-  use EntityReferenceTestTrait;
 
   /**
    * {@inheritdoc}
@@ -57,11 +53,11 @@ class EntityReferenceRdfaTest extends FieldRdfaTestBase {
 
     // Give anonymous users permission to view test entities.
     $this->installConfig(array('user'));
-    Role::load(RoleInterface::ANONYMOUS_ID)
+    Role::load(DRUPAL_ANONYMOUS_RID)
       ->grantPermission('view test entity')
       ->save();
 
-    $this->createEntityReferenceField($this->entityType, $this->bundle, $this->fieldName, 'Field test', $this->entityType);
+    entity_reference_create_field($this->entityType, $this->bundle, $this->fieldName, 'Field test', $this->entityType);
 
     // Add the mapping.
     $mapping = rdf_get_mapping('entity_test', 'entity_test');

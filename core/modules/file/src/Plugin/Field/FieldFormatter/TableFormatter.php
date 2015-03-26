@@ -28,19 +28,22 @@ class TableFormatter extends FileFormatterBase {
   public function viewElements(FieldItemListInterface $items) {
     $elements = array();
 
-    if ($files = $this->getEntitiesToView($items)) {
+    if (!$items->isEmpty()) {
+
       $header = array(t('Attachment'), t('Size'));
       $rows = array();
-      foreach ($files as $delta => $file) {
-        $rows[] = array(
-          array(
-            'data' => array(
-              '#theme' => 'file_link',
-              '#file' => $file,
+      foreach ($items as $delta => $item) {
+        if ($item->isDisplayed() && $item->entity) {
+          $rows[] = array(
+            array(
+              'data' => array(
+                '#theme' => 'file_link',
+                '#file' => $item->entity,
+              ),
             ),
-          ),
-          array('data' => format_size($file->getSize())),
-        );
+            array('data' => format_size($item->entity->getSize())),
+          );
+        }
       }
 
       $elements[0] = array();

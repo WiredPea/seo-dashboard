@@ -88,11 +88,11 @@ class NodeType extends DrupalSqlBase {
   /**
    * {@inheritdoc}
    */
-  protected function initializeIterator() {
+  protected function runQuery() {
     $this->teaserLength = $this->variableGet('teaser_length', 600);
     $this->nodePreview = $this->variableGet('node_preview', 0);
     $this->themeSettings = $this->variableGet('theme_settings', array());
-    return parent::initializeIterator();
+    return parent::runQuery();
   }
 
   /**

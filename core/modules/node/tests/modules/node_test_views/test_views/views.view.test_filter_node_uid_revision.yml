@@ -1,4 +1,4 @@
-langcode: en
+langcode: und
 status: true
 dependencies:
   module:
@@ -9,7 +9,7 @@ label: test_filter_node_uid_revision
 module: views
 description: ''
 tag: default
-base_table: node_field_data
+base_table: node
 base_field: nid
 core: 8.0-dev
 display:
@@ -24,9 +24,9 @@ display:
       fields:
         nid:
           id: nid
-          table: node_field_data
+          table: node
           field: nid
-          plugin_id: field
+          plugin_id: node
           entity_type: node
           entity_field: nid
       filter_groups:
@@ -50,7 +50,7 @@ display:
       sorts:
         nid:
           id: nid
-          table: node_field_data
+          table: node
           field: nid
           order: ASC
           plugin_id: standard

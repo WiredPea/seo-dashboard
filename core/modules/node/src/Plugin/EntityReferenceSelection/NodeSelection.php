@@ -8,7 +8,6 @@
 namespace Drupal\node\Plugin\EntityReferenceSelection;
 
 use Drupal\Core\Entity\Plugin\EntityReferenceSelection\SelectionBase;
-use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides specific access control for the node entity type.
@@ -22,15 +21,6 @@ use Drupal\Core\Form\FormStateInterface;
  * )
  */
 class NodeSelection extends SelectionBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $form = parent::buildConfigurationForm($form, $form_state);
-    $form['target_bundles']['#title'] = $this->t('Content types');
-    return $form;
-  }
 
   /**
    * {@inheritdoc}

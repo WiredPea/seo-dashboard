@@ -13,9 +13,6 @@ namespace Symfony\Component\Validator\Tests\Constraints;
 
 use Symfony\Component\Validator\Validation;
 
-/**
- * @group legacy
- */
 class LegacyCollectionValidatorArrayObjectLegacyApiTest extends CollectionValidatorArrayObjectTest
 {
     protected function getApiVersion()

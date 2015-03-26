@@ -57,6 +57,7 @@ class FieldPluginBaseTest extends UnitTestCase {
     'alias' => FALSE,
     'entity' => NULL,
     'entity_type' => NULL,
+    'html' => TRUE,
     'language' => NULL,
     'query' => [],
     'set_active_class' => FALSE,

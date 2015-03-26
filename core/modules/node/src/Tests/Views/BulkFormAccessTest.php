@@ -8,7 +8,6 @@
 namespace Drupal\node\Tests\Views;
 use Drupal\Component\Utility\String;
 use Drupal\node\Entity\Node;
-use Drupal\node\Entity\NodeType;
 
 /**
  * Tests if entity access is respected on a node bulk operations form.
@@ -53,7 +52,7 @@ class BulkFormAccessTest extends NodeTestBase {
 
     $this->accessHandler = \Drupal::entityManager()->getAccessControlHandler('node');
 
-    node_access_test_add_field(NodeType::load('article'));
+    node_access_test_add_field(entity_load('node_type', 'article'));
 
     // After enabling a node access module, the access table has to be rebuild.
     node_access_rebuild();

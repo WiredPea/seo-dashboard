@@ -10,7 +10,6 @@ namespace Drupal\comment\Tests;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\comment\CommentInterface;
-use Drupal\user\RoleInterface;
 
 /**
  * Basic comment links tests to ensure markup present.
@@ -88,7 +87,7 @@ class CommentLinksTest extends CommentTestBase {
       'skip comment approval' => 1,
       'edit own comments' => 1,
     );
-    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, $perms);
+    user_role_change_permissions(DRUPAL_ANONYMOUS_RID, $perms);
 
     $nid = $this->node->id();
 

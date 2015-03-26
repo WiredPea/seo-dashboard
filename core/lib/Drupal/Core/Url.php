@@ -740,6 +740,13 @@ class Url {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function __toString() {
+    return $this->toString();
+  }
+
+  /**
    * Returns the route information for a render array.
    *
    * @return array

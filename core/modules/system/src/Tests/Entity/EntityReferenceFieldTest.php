@@ -12,7 +12,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
@@ -25,9 +24,7 @@ use Drupal\user\UserInterface;
  * @group Entity
  */
 class EntityReferenceFieldTest extends EntityUnitTestBase {
-
   use SchemaCheckTestTrait;
-  use EntityReferenceTestTrait;
 
   /**
    * The entity type used in this test.
@@ -73,7 +70,7 @@ class EntityReferenceFieldTest extends EntityUnitTestBase {
     $this->installEntitySchema('entity_test_rev');
 
     // Create a field.
-    $this->createEntityReferenceField(
+    entity_reference_create_field(
       $this->entityType,
       $this->bundle,
       $this->fieldName,
@@ -181,7 +178,7 @@ class EntityReferenceFieldTest extends EntityUnitTestBase {
   public function testReferencedEntitiesStringId() {
     $field_name = 'entity_reference_string_id';
     $this->installEntitySchema('entity_test_string_id');
-    $this->createEntityReferenceField(
+    entity_reference_create_field(
       $this->entityType,
       $this->bundle,
       $field_name,

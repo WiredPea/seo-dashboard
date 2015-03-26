@@ -11,7 +11,6 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\PluginSettingsInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -141,9 +140,11 @@ class EntityViewDisplayEditForm extends EntityDisplayFormBase {
    */
   protected function getOverviewUrl($mode) {
     $entity_type = $this->entityManager->getDefinition($this->entity->getTargetEntityTypeId());
-    return Url::fromRoute('entity.entity_view_display.' . $this->entity->getTargetEntityTypeId() . '.view_mode', [
+    $field_entity_type = $entity_type->getBundleEntityType() != 'bundle'?  $entity_type->getBundleEntityType() : $entity_type->id();
+    return Url::fromRoute('entity.entity_view_display.' . $field_entity_type . '.view_mode', [
+      $this->bundleEntityTypeId => $this->entity->getTargetBundle(),
       'view_mode_name' => $mode,
-    ] + FieldUI::getRouteBundleParameter($entity_type, $this->entity->getTargetBundle()));
+    ]);
   }
 
   /**

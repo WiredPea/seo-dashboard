@@ -28,7 +28,7 @@ class BlockDependenciesTest extends ViewUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'block', 'user', 'field');
+  public static $modules = array('node', 'block', 'user');
 
   /**
    * Tests that exposed filter blocks have the correct dependencies.

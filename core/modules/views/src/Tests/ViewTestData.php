@@ -56,9 +56,6 @@ class ViewTestData {
         }
       }
     }
-
-    // Rebuild the router once.
-    \Drupal::service('router.builder')->rebuild();
   }
 
   /**

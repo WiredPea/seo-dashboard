@@ -667,14 +667,4 @@ class Drupal {
     return static::getContainer()->get('access_manager');
   }
 
-  /**
-   * Returns the redirect destination helper.
-   *
-   * @return \Drupal\Core\Routing\RedirectDestinationInterface
-   *   The redirect destination helper.
-   */
-  public static function destination() {
-    return static::getContainer()->get('redirect.destination');
-  }
-
 }

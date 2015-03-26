@@ -9,7 +9,6 @@ namespace Drupal\views_ui\Tests;
 
 use Drupal\Core\Url;
 use Drupal\user\Entity\Role;
-use Drupal\user\RoleInterface;
 
 /**
  * Tests enabling, disabling, and reverting default views via the listing page.
@@ -113,7 +112,7 @@ class DefaultViewsTest extends UITestBase {
     $this->assertLinkByHref($edit_href);
 
     // Clear permissions for anonymous users to check access for default views.
-    Role::load(RoleInterface::ANONYMOUS_ID)->revokePermission('access content')->save();
+    Role::load(DRUPAL_ANONYMOUS_RID)->revokePermission('access content')->save();
 
     // Test the default views disclose no data by default.
     $this->drupalLogout();

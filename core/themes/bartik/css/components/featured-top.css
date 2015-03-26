@@ -1,9 +1,6 @@
-/**
- * @file
- * Visual styles for Bartik's featured top.
- */
+/* ----------------- Featured ----------------- */
 
-.featured-top {
+#featured-top {
   text-align: center;
   font-size: 1.2em;
   font-weight: normal;
@@ -15,11 +12,11 @@
   border-bottom: 1px solid #e7e7e7;
   text-shadow: 1px 1px #fff;
 }
-.featured-top h2 {
+#featured-top h2 {
   font-size: 1.2em;
   line-height: 1;
 }
-.featured-top p {
+#featured-top p {
   margin: 0;
   padding: 0;
 }

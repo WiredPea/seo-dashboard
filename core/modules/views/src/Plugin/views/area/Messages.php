@@ -32,7 +32,7 @@ class Messages extends AreaPluginBase {
   public function render($empty = FALSE) {
     if (!$empty || !empty($this->options['empty'])) {
       return array(
-        '#type' => 'status_messages',
+        '#theme' => 'status_messages',
       );
     }
     return array();

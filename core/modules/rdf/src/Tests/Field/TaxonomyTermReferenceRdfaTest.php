@@ -10,7 +10,6 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\user\Entity\Role;
-use Drupal\user\RoleInterface;
 
 /**
  * Tests the RDFa output of the taxonomy term reference field formatter.
@@ -102,7 +101,7 @@ class TaxonomyTermReferenceRdfaTest extends FieldRdfaTestBase {
     // Tests the plain formatter.
     $this->assertFormatterRdfa(array('type' => 'taxonomy_term_reference_plain'), 'http://schema.org/about', array('value' => $this->term->getName(), 'type' => 'literal'));
     // Grant the access content permission to the anonymous user.
-    Role::create(array('id' => RoleInterface::ANONYMOUS_ID))
+    Role::create(array('id' => DRUPAL_ANONYMOUS_RID))
       ->grantPermission('access content')
       ->save();
     // Tests the link formatter.

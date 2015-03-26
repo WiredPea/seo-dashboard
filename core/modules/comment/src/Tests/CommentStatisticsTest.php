@@ -9,7 +9,6 @@ namespace Drupal\comment\Tests;
 
 use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\Entity\Comment;
-use Drupal\user\RoleInterface;
 
 /**
  * Tests comment statistics on nodes.
@@ -75,7 +74,7 @@ class CommentStatisticsTest extends CommentTestBase {
 
     // Prepare for anonymous comment submission (comment approval enabled).
     $this->drupalLogin($this->adminUser);
-    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, array(
+    user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
       'access comments' => TRUE,
       'post comments' => TRUE,
       'skip comment approval' => FALSE,
@@ -99,7 +98,7 @@ class CommentStatisticsTest extends CommentTestBase {
 
     // Prepare for anonymous comment submission (no approval required).
     $this->drupalLogin($this->adminUser);
-    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, array(
+    user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
       'access comments' => TRUE,
       'post comments' => TRUE,
       'skip comment approval' => TRUE,

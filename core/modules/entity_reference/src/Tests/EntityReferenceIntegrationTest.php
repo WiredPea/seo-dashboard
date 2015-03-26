@@ -10,7 +10,6 @@ namespace Drupal\entity_reference\Tests;
 use Drupal\Component\Utility\String;
 use Drupal\config\Tests\AssertConfigEntityImportTrait;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\simpletest\WebTestBase;
 
@@ -20,9 +19,7 @@ use Drupal\simpletest\WebTestBase;
  * @group entity_reference
  */
 class EntityReferenceIntegrationTest extends WebTestBase {
-
   use AssertConfigEntityImportTrait;
-  use EntityReferenceTestTrait;
 
   /**
    * The entity type used in this test.
@@ -71,7 +68,7 @@ class EntityReferenceIntegrationTest extends WebTestBase {
       $this->fieldName = 'field_test_' . $referenced_entities[0]->getEntityTypeId();
 
       // Create an Entity reference field.
-      $this->createEntityReferenceField($this->entityType, $this->bundle, $this->fieldName, $this->fieldName, $referenced_entities[0]->getEntityTypeId(), 'default', array(), 2);
+      entity_reference_create_field($this->entityType, $this->bundle, $this->fieldName, $this->fieldName, $referenced_entities[0]->getEntityTypeId(), 'default', array(), 2);
 
       // Test the default 'entity_reference_autocomplete' widget.
       entity_get_form_display($this->entityType, $this->bundle, 'default')->setComponent($this->fieldName)->save();

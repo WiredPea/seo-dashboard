@@ -9,7 +9,7 @@ namespace Drupal\node\Plugin\views\argument;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Database\Connection;
-use Drupal\views\Plugin\views\argument\NumericArgument;
+use Drupal\views\Plugin\views\argument\Numeric;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\node\NodeStorageInterface;
 
@@ -18,7 +18,7 @@ use Drupal\node\NodeStorageInterface;
  *
  * @ViewsArgument("node_vid")
  */
-class Vid extends NumericArgument {
+class Vid extends Numeric {
 
   /**
    * Database Service Object.

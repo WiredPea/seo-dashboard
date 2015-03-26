@@ -8,7 +8,6 @@
 namespace Drupal\locale\Tests;
 
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -137,7 +136,7 @@ class LocalePathTest extends WebTestBase {
 
     // Test that both node titles link to our path alias.
     $this->drupalGet('admin/content');
-    $custom_path_url = Url::fromUserInput('/' . $custom_path)->toString();
+    $custom_path_url = base_path() . $GLOBALS['script_path'] . $custom_path;
     $elements = $this->xpath('//a[@href=:href and normalize-space(text())=:title]', array(':href' => $custom_path_url, ':title' => $first_node->label()));
     $this->assertTrue(!empty($elements), 'First node links to the path alias.');
     $elements = $this->xpath('//a[@href=:href and normalize-space(text())=:title]', array(':href' => $custom_path_url, ':title' => $second_node->label()));

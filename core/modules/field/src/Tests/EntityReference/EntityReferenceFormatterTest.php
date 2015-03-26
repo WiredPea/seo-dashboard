@@ -9,12 +9,10 @@ namespace Drupal\field\Tests\EntityReference;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
 use Drupal\user\Entity\Role;
-use Drupal\user\RoleInterface;
 
 /**
  * Tests the formatters functionality.
@@ -22,8 +20,6 @@ use Drupal\user\RoleInterface;
  * @group entity_reference
  */
 class EntityReferenceFormatterTest extends EntityUnitTestBase {
-
-  use EntityReferenceTestTrait;
 
   /**
    * The entity type used in this test.
@@ -73,7 +69,7 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
 
     // Grant the 'view test entity' permission.
     $this->installConfig(array('user'));
-    Role::load(RoleInterface::ANONYMOUS_ID)
+    Role::load(DRUPAL_ANONYMOUS_RID)
       ->grantPermission('view test entity')
       ->save();
 
@@ -81,7 +77,7 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
     $this->installSchema('system', 'router');
     $this->container->get('router.builder')->rebuild();
 
-    $this->createEntityReferenceField($this->entityType, $this->bundle, $this->fieldName, 'Field test', $this->entityType, 'default', array(), FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+    entity_reference_create_field($this->entityType, $this->bundle, $this->fieldName, 'Field test', $this->entityType, 'default', array(), FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
 
     // Set up a field, so that the entity that'll be referenced bubbles up a
     // cache tag when rendering it entirely.
@@ -130,7 +126,7 @@ class EntityReferenceFormatterTest extends EntityUnitTestBase {
    */
   public function testAccess() {
     // Revoke the 'view test entity' permission for this test.
-    Role::load(RoleInterface::ANONYMOUS_ID)
+    Role::load(DRUPAL_ANONYMOUS_RID)
       ->revokePermission('view test entity')
       ->save();
 

@@ -9,6 +9,7 @@ namespace Drupal\Core\StackMiddleware;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\ContentNegotiation;
 use Drupal\Core\PageCache\RequestPolicyInterface;
 use Drupal\Core\PageCache\ResponsePolicyInterface;
 use Drupal\Core\Site\Settings;
@@ -52,6 +53,13 @@ class PageCache implements HttpKernelInterface {
   protected $responsePolicy;
 
   /**
+   * The content negotiation library.
+   *
+   * @var \Drupal\Core\ContentNegotiation
+   */
+  protected $contentNegotiation;
+
+  /**
    * Constructs a ReverseProxyMiddleware object.
    *
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
@@ -62,12 +70,15 @@ class PageCache implements HttpKernelInterface {
    *   A policy rule determining the cacheability of a request.
    * @param \Drupal\Core\PageCache\ResponsePolicyInterface $response_policy
    *   A policy rule determining the cacheability of the response.
+   * @param \Drupal\Core\ContentNegotiation $content_negotiation
+   *   The content negotiation library.
    */
-  public function __construct(HttpKernelInterface $http_kernel, CacheBackendInterface $cache, RequestPolicyInterface $request_policy, ResponsePolicyInterface $response_policy) {
+  public function __construct(HttpKernelInterface $http_kernel, CacheBackendInterface $cache, RequestPolicyInterface $request_policy, ResponsePolicyInterface $response_policy, ContentNegotiation $content_negotiation) {
     $this->httpKernel = $http_kernel;
     $this->cache = $cache;
     $this->requestPolicy = $request_policy;
     $this->responsePolicy = $response_policy;
+    $this->contentNegotiation = $content_negotiation;
   }
 
   /**
@@ -321,7 +332,7 @@ class PageCache implements HttpKernelInterface {
   protected function getCacheId(Request $request) {
     $cid_parts = array(
       $request->getUri(),
-      $request->getRequestFormat(),
+      $this->contentNegotiation->getContentType($request),
     );
     return implode(':', $cid_parts);
   }

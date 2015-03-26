@@ -54,9 +54,7 @@ class Session implements HttpKernelInterface {
    */
   public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE) {
     if ($type === self::MASTER_REQUEST && PHP_SAPI !== 'cli') {
-      $session = $this->container->get($this->sessionServiceName);
-      $session->start();
-      $request->setSession($session);
+      $request->setSession($this->container->get($this->sessionServiceName));
     }
 
     $result = $this->httpKernel->handle($request, $type, $catch);

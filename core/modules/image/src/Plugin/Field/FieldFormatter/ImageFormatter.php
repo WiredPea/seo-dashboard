@@ -167,14 +167,8 @@ class ImageFormatter extends ImageFormatterBase implements ContainerFactoryPlugi
    */
   public function viewElements(FieldItemListInterface $items) {
     $elements = array();
-    $files = $this->getEntitiesToView($items);
-
-    // Early opt-out if the field is empty.
-    if (empty($files)) {
-      return $elements;
-    }
-
     $url = NULL;
+
     $image_link_setting = $this->getSetting('image_link');
     // Check if the formatter involves a link.
     if ($image_link_setting == 'content') {
@@ -196,28 +190,29 @@ class ImageFormatter extends ImageFormatterBase implements ContainerFactoryPlugi
       $cache_tags = $image_style->getCacheTags();
     }
 
-    foreach ($files as $delta => $file) {
-      if (isset($link_file)) {
-        $image_uri = $file->getFileUri();
-        $url = Url::fromUri(file_create_url($image_uri));
+    foreach ($items as $delta => $item) {
+      if ($item->entity) {
+        if (isset($link_file)) {
+          $image_uri = $item->entity->getFileUri();
+          $url = Url::fromUri(file_create_url($image_uri));
+        }
+
+        // Extract field item attributes for the theme function, and unset them
+        // from the $item so that the field template does not re-render them.
+        $item_attributes = $item->_attributes;
+        unset($item->_attributes);
+
+        $elements[$delta] = array(
+          '#theme' => 'image_formatter',
+          '#item' => $item,
+          '#item_attributes' => $item_attributes,
+          '#image_style' => $image_style_setting,
+          '#url' => $url,
+          '#cache' => array(
+            'tags' => $cache_tags,
+          ),
+        );
       }
-
-      // Extract field item attributes for the theme function, and unset them
-      // from the $item so that the field template does not re-render them.
-      $item = $file->_referringItem;
-      $item_attributes = $item->_attributes;
-      unset($item->_attributes);
-
-      $elements[$delta] = array(
-        '#theme' => 'image_formatter',
-        '#item' => $item,
-        '#item_attributes' => $item_attributes,
-        '#image_style' => $image_style_setting,
-        '#url' => $url,
-        '#cache' => array(
-          'tags' => $cache_tags,
-        ),
-      );
     }
 
     return $elements;

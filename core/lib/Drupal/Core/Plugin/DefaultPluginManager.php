@@ -81,13 +81,6 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
   protected $defaults = array();
 
   /**
-   * Flag whether persistent caches should be used.
-   *
-   * @var bool
-   */
-  protected $useCaches = TRUE;
-
-  /**
    * Creates the discovery object.
    *
    * @param string|bool $subdir
@@ -187,7 +180,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    *   and would actually be returned by the getDefinitions() method.
    */
   protected function getCachedDefinitions() {
-    if (!isset($this->definitions) && $cache = $this->cacheGet($this->cacheKey)) {
+    if (!isset($this->definitions) && $this->cacheBackend && $cache = $this->cacheBackend->get($this->cacheKey)) {
       $this->definitions = $cache->data;
     }
     return $this->definitions;
@@ -200,41 +193,10 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    *   List of definitions to store in cache.
    */
   protected function setCachedDefinitions($definitions) {
-    $this->cacheSet($this->cacheKey, $definitions, Cache::PERMANENT, $this->cacheTags);
+    if ($this->cacheBackend) {
+      $this->cacheBackend->set($this->cacheKey, $definitions, Cache::PERMANENT, $this->cacheTags);
+    }
     $this->definitions = $definitions;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function useCaches($use_caches = FALSE) {
-    $this->useCaches = $use_caches;
-    if (!$use_caches) {
-      $this->definitions = NULL;
-    }
-  }
-
-  /**
-   * Fetches from the cache backend, respecting the use caches flag.
-   *
-   * @see \Drupal\Core\Cache\CacheBackendInterface::get()
-   */
-  protected function cacheGet($cid) {
-    if ($this->useCaches && $this->cacheBackend) {
-      return $this->cacheBackend->get($cid);
-    }
-    return FALSE;
-  }
-
-  /**
-   * Stores data in the persistent cache, respecting the use caches flag.
-   *
-   * @see \Drupal\Core\Cache\CacheBackendInterface::set()
-   */
-  protected function cacheSet($cid, $data, $expire = Cache::PERMANENT, array $tags = array()) {
-    if ($this->cacheBackend && $this->useCaches) {
-      $this->cacheBackend->set($cid, $data, $expire, $tags);
-    }
   }
 
 

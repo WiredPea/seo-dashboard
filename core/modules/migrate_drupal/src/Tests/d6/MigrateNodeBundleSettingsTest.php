@@ -86,21 +86,21 @@ class MigrateNodeBundleSettingsTest extends MigrateDrupal6TestBase {
 
     // Test settings on test_page bundle.
     $node = entity_create('node', array('type' => 'test_page'));
-    $this->assertIdentical(1, $node->status->value);
-    $this->assertIdentical(1, $node->promote->value);
-    $this->assertIdentical(1, $node->sticky->value);
+    $this->assertIdentical($node->status->value, 1);
+    $this->assertIdentical($node->promote->value, 1);
+    $this->assertIdentical($node->sticky->value, 1);
 
     // Test settings for test_story bundle.
     $node = entity_create('node', array('type' => 'test_story'));
-    $this->assertIdentical(1, $node->status->value);
-    $this->assertIdentical(1, $node->promote->value);
-    $this->assertIdentical(0, $node->sticky->value);
+    $this->assertIdentical($node->status->value, 1);
+    $this->assertIdentical($node->promote->value, 1);
+    $this->assertIdentical($node->sticky->value, 0);
 
     // Test settings for the test_event bundle.
     $node = entity_create('node', array('type' => 'test_event'));
-    $this->assertIdentical(0, $node->status->value);
-    $this->assertIdentical(0, $node->promote->value);
-    $this->assertIdentical(1, $node->sticky->value);
+    $this->assertIdentical($node->status->value, 0);
+    $this->assertIdentical($node->promote->value, 0);
+    $this->assertIdentical($node->sticky->value, 1);
   }
 
 }

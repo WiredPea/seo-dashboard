@@ -187,6 +187,9 @@ class LocalTaskManagerTest extends UnitTestCase {
       ->method('set')
       ->with('local_task_plugins:en', $definitions, Cache::PERMANENT);
 
+    $this->routeBuilder->expects($this->once())
+      ->method('rebuildIfNeeded');
+
     $expected_set = $this->getLocalTasksCache();
 
     $this->cacheBackend->expects($this->at(3))
@@ -220,7 +223,7 @@ class LocalTaskManagerTest extends UnitTestCase {
       ->method('set');
 
     $this->routeBuilder->expects($this->never())
-      ->method('rebuild');
+      ->method('rebuildIfNeeded');
 
     $result = $this->getLocalTasksForRouteResult($mock_plugin);
     $local_tasks = $this->manager->getLocalTasksForRoute('menu_local_task_test_tasks_view');

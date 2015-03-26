@@ -79,13 +79,11 @@ class UserPermissionsForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $role_names = array();
     $role_permissions = array();
-    $admin_roles = array();
     foreach ($this->getRoles() as $role_name => $role) {
       // Retrieve role names for columns.
       $role_names[$role_name] = String::checkPlain($role->label());
       // Fetch permissions for the roles.
       $role_permissions[$role_name] = $role->getPermissions();
-      $admin_roles[$role_name] = $role->isAdmin();
     }
 
     // Store $role_names for use when saving the data.
@@ -166,11 +164,6 @@ class UserPermissionsForm extends FormBase {
             '#attributes' => array('class' => array('rid-' . $rid)),
             '#parents' => array($rid, $perm),
           );
-          // Show a column of disabled but checked checkboxes.
-          if ($admin_roles[$rid]) {
-            $form['permissions'][$perm][$rid]['#disabled'] = TRUE;
-            $form['permissions'][$perm][$rid]['#default_value'] = TRUE;
-          }
         }
       }
     }
@@ -188,7 +181,7 @@ class UserPermissionsForm extends FormBase {
    */
   function submitForm(array &$form, FormStateInterface $form_state) {
     foreach ($form_state->getValue('role_names') as $role_name => $name) {
-      user_role_change_permissions($role_name, (array) $form_state->getValue($role_name));
+      user_role_change_permissions($role_name, $form_state->getValue($role_name));
     }
 
     drupal_set_message($this->t('The changes have been saved.'));

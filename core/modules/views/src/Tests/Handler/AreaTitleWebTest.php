@@ -38,48 +38,26 @@ class AreaTitleWebTest extends ViewTestBase {
    * Tests the title area handler.
    */
   public function testTitleText() {
-    // Confirm that the view has the normal title before making the view return
-    // no result.
     $this->drupalGet('test-area-title');
     $this->assertTitle('test_title_header | Drupal');
 
-    // Change the view to return no result.
+    // Check the view to return no result.
     /** @var \Drupal\views\Entity\View $view */
     $view = View::load('test_area_title');
     $display =& $view->getDisplay('default');
-    $display['display_options']['filters']['name'] = [
-      'field' => 'name',
-      'id' => 'name',
+    $display['display_options']['filters']['id'] = [
+      'field' => 'id',
+      'id' => 'id',
       'table' => 'views_test_data',
       'relationship' => 'none',
-      'plugin_id' => 'string',
-      // Add a value which does not exist. The dataset is defined in
-      // \Drupal\views\Tests\ViewTestData::dataSet().
-      'value' => 'Euler',
+      'plugin_id' => 'numeric',
+      // Add a value which does not exist.
+      'value' => ['value' => '042118160112'],
     ];
     $view->save();
 
     $this->drupalGet('test-area-title');
     $this->assertTitle('test_title_empty | Drupal');
-
-    // Change the view to return a result instead.
-    /** @var \Drupal\views\Entity\View $view */
-    $view = View::load('test_area_title');
-    $display =& $view->getDisplay('default');
-    $display['display_options']['filters']['name'] = [
-      'field' => 'name',
-      'id' => 'name',
-      'table' => 'views_test_data',
-      'relationship' => 'none',
-      'plugin_id' => 'string',
-      // Change to a value which does exist. The dataset is defined in
-      // \Drupal\views\Tests\ViewTestData::dataSet().
-      'value' => 'Ringo',
-    ];
-    $view->save();
-
-    $this->drupalGet('test-area-title');
-    $this->assertTitle('test_title_header | Drupal');
   }
 
 }

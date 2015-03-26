@@ -29,8 +29,8 @@ class FulfilledPromiseTest extends TestCase
             'reject' => function () {
                 throw new \LogicException('You cannot call reject() for React\Promise\FulfilledPromise');
             },
-            'notify' => function () {
-                // no-op
+            'progress' => function () {
+                throw new \LogicException('You cannot call progress() for React\Promise\FulfilledPromise');
             },
             'settle' => function ($value = null) use (&$promise) {
                 if (!$promise) {

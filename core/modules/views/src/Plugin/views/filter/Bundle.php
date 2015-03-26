@@ -123,9 +123,8 @@ class Bundle extends InOperator {
     $bundle_entity_storage = $this->entityManager->getStorage($bundle_entity_type);
 
     foreach (array_keys($this->value) as $bundle) {
-      if ($bundle_entity = $bundle_entity_storage->load($bundle)) {
-        $dependencies[$bundle_entity->getConfigDependencyKey()][] = $bundle_entity->getConfigDependencyName();
-      }
+      $bundle_entity = $bundle_entity_storage->load($bundle);
+      $dependencies[$bundle_entity->getConfigDependencyKey()][] = $bundle_entity->getConfigDependencyName();
     }
 
     return $dependencies;

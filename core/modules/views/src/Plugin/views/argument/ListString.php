@@ -12,7 +12,7 @@ use Drupal\Core\Field\AllowedTagsXssTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
-use Drupal\views\Plugin\views\argument\StringArgument;
+use Drupal\views\Plugin\views\argument\String;
 
 /**
  * Argument handler for list field to show the human readable name in the
@@ -22,7 +22,7 @@ use Drupal\views\Plugin\views\argument\StringArgument;
  *
  * @ViewsArgument("field_list_string")
  */
-class ListString extends StringArgument {
+class ListString extends String {
 
   use AllowedTagsXssTrait;
 
@@ -34,7 +34,7 @@ class ListString extends StringArgument {
   var $allowed_values = NULL;
 
   /**
-   * Overrides \Drupal\views\Plugin\views\argument\StringArgument::init().
+   * Overrides \Drupal\views\Plugin\views\argument\String::init().
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);

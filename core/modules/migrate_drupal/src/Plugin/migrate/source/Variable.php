@@ -39,7 +39,7 @@ class Variable extends DrupalSqlBase {
   /**
    * {@inheritdoc}
    */
-  protected function initializeIterator() {
+  protected function runQuery() {
     return new \ArrayIterator(array($this->values()));
   }
 

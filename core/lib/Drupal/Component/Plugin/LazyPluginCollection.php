@@ -12,7 +12,7 @@ namespace Drupal\Component\Plugin;
  *
  * @ingroup plugin_api
  */
-abstract class LazyPluginCollection implements \IteratorAggregate, \Countable {
+abstract class LazyPluginCollection implements \Iterator, \Countable {
 
   /**
    * Stores all instantiated plugins.
@@ -147,12 +147,46 @@ abstract class LazyPluginCollection implements \IteratorAggregate, \Countable {
     $this->remove($instance_id);
   }
 
-  public function getIterator() {
-    $instances = [];
-    foreach ($this->getInstanceIds() as $instance_id) {
-      $instances[$instance_id] = $this->get($instance_id);
-    }
-    return new \ArrayIterator($instances);
+  /**
+   * {@inheritdoc}
+   */
+  public function current() {
+    return $this->get($this->key());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function next() {
+    next($this->instanceIDs);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function key() {
+    return key($this->instanceIDs);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function valid() {
+    $key = key($this->instanceIDs);
+    // Check the key is valid but also that this key yields a plugin from get().
+    // There can be situations where configuration contains data for a plugin
+    // that cannot be instantiated. In this case, this enables us to skip that
+    // plugin during iteration.
+    // @todo Look at removing when https://drupal.org/node/2080823 has been
+    //   solved.
+    return $key !== NULL && $key !== FALSE && $this->get($key);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function rewind() {
+    reset($this->instanceIDs);
   }
 
   /**

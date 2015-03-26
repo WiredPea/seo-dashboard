@@ -38,7 +38,7 @@ class ViewsLocalTask extends DeriverBase implements ContainerDeriverInterface {
    *
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
    *   The route provider.
-   * @param \Drupal\Core\State\StateInterface $state
+   * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface $state
    *   The state key value store.
    */
   public function __construct(RouteProviderInterface $route_provider, StateInterface $state) {

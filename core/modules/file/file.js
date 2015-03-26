@@ -134,10 +134,10 @@
      * Prevent file uploads when using buttons not intended to upload.
      */
     disableFields: function (event) {
-      var $clickedButton = $(this).findOnce('ajax');
+      var $clickedButton = $(this);
 
       // Only disable upload fields for Ajax buttons.
-      if (!$clickedButton.length) {
+      if (!$clickedButton.hasClass('ajax-processed')) {
         return;
       }
 

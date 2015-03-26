@@ -123,7 +123,7 @@ class User extends ArgumentDefaultPluginBase implements CacheablePluginInterface
    * {@inheritdoc}
    */
   public function getCacheContexts() {
-    return ['url'];
+    return ['cache.context.url'];
   }
 
 }

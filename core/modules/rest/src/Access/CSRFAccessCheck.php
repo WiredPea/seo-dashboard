@@ -10,7 +10,6 @@ namespace Drupal\rest\Access;
 use Drupal\Core\Access\AccessCheckInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Session\SessionConfigurationInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -18,23 +17,6 @@ use Symfony\Component\HttpFoundation\Request;
  * Access protection against CSRF attacks.
  */
 class CSRFAccessCheck implements AccessCheckInterface {
-
-  /**
-   * The session configuration.
-   *
-   * @var \Drupal\Core\Session\SessionConfigurationInterface
-   */
-  protected $sessionConfiguration;
-
-  /**
-   * Constructs a new rest CSRF access check.
-   *
-   * @param \Drupal\Core\Session\SessionConfigurationInterface $session_configuration
-   *   The session configuration.
-   */
-  public function __construct(SessionConfigurationInterface $session_configuration) {
-    $this->sessionConfiguration = $session_configuration;
-  }
 
   /**
    * Implements AccessCheckInterface::applies().
@@ -72,6 +54,7 @@ class CSRFAccessCheck implements AccessCheckInterface {
    */
   public function access(Request $request, AccountInterface $account) {
     $method = $request->getMethod();
+    $cookie = $request->attributes->get('_authentication_provider') == 'cookie';
 
     // This check only applies if
     // 1. this is a write operation
@@ -79,7 +62,7 @@ class CSRFAccessCheck implements AccessCheckInterface {
     // 3. the request comes with a session cookie.
     if (!in_array($method, array('GET', 'HEAD', 'OPTIONS', 'TRACE'))
       && $account->isAuthenticated()
-      && $this->sessionConfiguration->hasSession($request)
+      && $cookie
     ) {
       $csrf_token = $request->headers->get('X-CSRF-Token');
       if (!\Drupal::csrfToken()->validate($csrf_token, 'rest')) {
@@ -89,5 +72,4 @@ class CSRFAccessCheck implements AccessCheckInterface {
     // Let other access checkers decide if the request is legit.
     return AccessResult::allowed()->setCacheable(FALSE);
   }
-
 }

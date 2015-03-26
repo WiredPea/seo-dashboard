@@ -18,7 +18,7 @@ use Drupal\views\Plugin\views\row\RssPluginBase;
  *   help = @Translation("Display the comment as RSS."),
  *   theme = "views_view_row_rss",
  *   register_theme = FALSE,
- *   base = {"comment_field_data"},
+ *   base = {"comment"},
  *   display_types = {"feed"}
  * )
  */
@@ -27,7 +27,7 @@ class Rss extends RssPluginBase {
   /**
    * {@inheritdoc}
    */
-  protected $base_table = 'comment_field_data';
+  protected $base_table = 'comment';
 
   /**
    * {@inheritdoc}

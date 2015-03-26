@@ -36,13 +36,23 @@ class SwitchShortcutSet extends FormBase {
   protected $shortcutSetStorage;
 
   /**
+   * The current route match.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface
+   */
+  protected $routeMatch;
+
+  /**
    * Constructs a SwitchShortcutSet object.
    *
    * @param \Drupal\shortcut\ShortcutSetStorageInterface $shortcut_set_storage
    *   The shortcut set storage.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The current route match.
    */
-  public function __construct(ShortcutSetStorageInterface $shortcut_set_storage) {
+  public function __construct(ShortcutSetStorageInterface $shortcut_set_storage, RouteMatchInterface $route_match) {
     $this->shortcutSetStorage = $shortcut_set_storage;
+    $this->routeMatch = $route_match;
   }
 
   /**
@@ -50,7 +60,8 @@ class SwitchShortcutSet extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager')->getStorage('shortcut_set')
+      $container->get('entity.manager')->getStorage('shortcut_set'),
+      $container->get('current_route_match')
     );
   }
 
@@ -164,6 +175,10 @@ class SwitchShortcutSet extends FormBase {
       if (trim($form_state->getValue('label')) == '') {
         $form_state->setErrorByName('new', $this->t('The new set label is required.'));
       }
+      // Check to prevent a duplicate title.
+      if (shortcut_set_title_exists($form_state->getValue('label'))) {
+        $form_state->setErrorByName('label', $this->t('The shortcut set %name already exists. Choose another name.', array('%name' => $form_state->getValue('label'))));
+      }
     }
   }
 
@@ -185,7 +200,7 @@ class SwitchShortcutSet extends FormBase {
       $replacements = array(
         '%user' => $this->user->label(),
         '%set_name' => $set->label(),
-        '@switch-url' => $this->url('<current>'),
+        '@switch-url' => $this->url($this->routeMatch->getRouteName(), array('user' => $this->user->id())),
       );
       if ($account_is_user) {
         // Only administrators can create new shortcut sets, so we know they have

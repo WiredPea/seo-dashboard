@@ -46,8 +46,8 @@ class MigrateLocaleConfigsTest extends MigrateDrupal6TestBase {
    */
   public function testLocaleSettings() {
     $config = $this->config('locale.settings');
-    $this->assertIdentical(TRUE, $config->get('cache_strings'));
-    $this->assertIdentical('languages', $config->get('javascript.directory'));
+    $this->assertIdentical($config->get('cache_strings'), TRUE);
+    $this->assertIdentical($config->get('javascript.directory'), 'languages');
     $this->assertConfigSchema(\Drupal::service('config.typed'), 'locale.settings', $config->get());
   }
 

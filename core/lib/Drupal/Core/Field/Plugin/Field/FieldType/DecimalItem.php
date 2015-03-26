@@ -19,7 +19,6 @@ use Drupal\Core\TypedData\DataDefinition;
  *   id = "decimal",
  *   label = @Translation("Number (decimal)"),
  *   description = @Translation("This field stores a number in the database in a fixed decimal format."),
- *   category = @Translation("Number"),
  *   default_widget = "number",
  *   default_formatter = "number_decimal"
  * )

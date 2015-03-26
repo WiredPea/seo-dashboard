@@ -1,4 +1,4 @@
-langcode: en
+langcode: und
 status: true
 dependencies:
   module:
@@ -9,7 +9,7 @@ label: test_display_feed
 module: views
 description: ''
 tag: default
-base_table: node_field_data
+base_table: node
 base_field: nid
 core: '8'
 display:
@@ -37,8 +37,9 @@ display:
           hide_empty: false
           id: title
           label: ''
+          link_to_node: true
           table: node_field_data
-          plugin_id: field
+          plugin_id: node
           entity_type: node
           entity_field: title
       filters:

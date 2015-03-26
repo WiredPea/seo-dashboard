@@ -131,6 +131,7 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
       // While not all written data is read back, setting the cache instead of
       // just deleting it avoids cache rebuild stampedes.
       $this->cache->set($this->getCacheKey($name), $data);
+      Cache::invalidateTags(array($this::FIND_BY_PREFIX_CACHE_TAG));
       $this->findByPrefixCache = array();
       return TRUE;
     }
@@ -145,6 +146,7 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
     // rebuilding the cache before the storage is gone.
     if ($this->storage->delete($name)) {
       $this->cache->delete($this->getCacheKey($name));
+      Cache::invalidateTags(array($this::FIND_BY_PREFIX_CACHE_TAG));
       $this->findByPrefixCache = array();
       return TRUE;
     }
@@ -160,6 +162,7 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
     if ($this->storage->rename($name, $new_name)) {
       $this->cache->delete($this->getCacheKey($name));
       $this->cache->delete($this->getCacheKey($new_name));
+      Cache::invalidateTags(array($this::FIND_BY_PREFIX_CACHE_TAG));
       $this->findByPrefixCache = array();
       return TRUE;
     }
@@ -210,7 +213,20 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
   protected function findByPrefix($prefix) {
     $cache_key = $this->getCacheKey($prefix);
     if (!isset($this->findByPrefixCache[$cache_key])) {
-      $this->findByPrefixCache[$cache_key] = $this->storage->listAll($prefix);
+      // The : character is not allowed in config file names, so this can not
+      // conflict.
+      if ($cache = $this->cache->get('find:' . $cache_key)) {
+        $this->findByPrefixCache[$cache_key] = $cache->data;
+      }
+      else {
+        $this->findByPrefixCache[$cache_key] = $this->storage->listAll($prefix);
+        $this->cache->set(
+          'find:' . $cache_key,
+          $this->findByPrefixCache[$cache_key],
+          Cache::PERMANENT,
+          array($this::FIND_BY_PREFIX_CACHE_TAG)
+        );
+      }
     }
     return $this->findByPrefixCache[$cache_key];
   }

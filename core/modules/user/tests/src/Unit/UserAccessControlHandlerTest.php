@@ -205,6 +205,8 @@ class UserAccessControlHandlerTest extends UnitTestCase {
     $fields = array(
       'preferred_langcode',
       'preferred_admin_langcode',
+      'signature',
+      'signature_format',
       'timezone',
       'mail',
     );

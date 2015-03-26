@@ -32,7 +32,7 @@ class MessageTest extends KernelTestBase {
     drupal_set_message('An error occurred', 'error');
     drupal_set_message('But then something nice happened');
     $messages = array(
-      '#type' => 'status_messages',
+      '#theme' => 'status_messages',
     );
     $this->render($messages);
     $this->assertRaw('messages messages--error');

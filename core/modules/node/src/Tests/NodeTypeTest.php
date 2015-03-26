@@ -6,7 +6,6 @@
  */
 
 namespace Drupal\node\Tests;
-
 use Drupal\field\Entity\FieldConfig;
 use Drupal\node\Entity\NodeType;
 
@@ -30,7 +29,7 @@ class NodeTypeTest extends NodeTestBase {
    * Load available node types and validate the returned data.
    */
   function testNodeTypeGetFunctions() {
-    $node_types = NodeType::loadMultiple();
+    $node_types = node_type_get_types();
     $node_names = node_type_get_names();
 
     $this->assertTrue(isset($node_types['article']), 'Node type article is available.');
@@ -38,7 +37,7 @@ class NodeTypeTest extends NodeTestBase {
 
     $this->assertEqual($node_types['article']->label(), $node_names['article'], 'Correct node type base has been returned.');
 
-    $article = NodeType::load('article');
+    $article = entity_load('node_type', 'article');
     $this->assertEqual($node_types['article'], $article, 'Correct node type has been returned.');
     $this->assertEqual($node_types['article']->label(), $article->label(), 'Correct node type name has been returned.');
   }
@@ -50,7 +49,7 @@ class NodeTypeTest extends NodeTestBase {
     // Create a content type programmaticaly.
     $type = $this->drupalCreateContentType();
 
-    $type_exists = (bool) NodeType::load($type->id());
+    $type_exists = (bool) entity_load('node_type', $type->id());
     $this->assertTrue($type_exists, 'The new content type has been created in the database.');
 
     // Login a test user.
@@ -69,7 +68,7 @@ class NodeTypeTest extends NodeTestBase {
       'type' => 'foo',
     );
     $this->drupalPostForm('admin/structure/types/add', $edit, t('Save and manage fields'));
-    $type_exists = (bool) NodeType::load('foo');
+    $type_exists = (bool) entity_load('node_type', 'foo');
     $this->assertTrue($type_exists, 'The new content type has been created in the database.');
   }
 

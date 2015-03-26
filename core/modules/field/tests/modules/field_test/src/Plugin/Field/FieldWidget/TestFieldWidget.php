@@ -19,9 +19,8 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
  *   id = "test_field_widget",
  *   label = @Translation("Test widget"),
  *   field_types = {
- *     "test_field",
- *     "hidden_test_field",
- *     "test_field_with_preconfigured_options"
+ *      "test_field",
+ *      "hidden_test_field"
  *   },
  *   weight = -10
  * )

@@ -131,13 +131,6 @@ class Registry implements DestructableInterface {
   protected $themeHandler;
 
   /**
-   * The theme manager.
-   *
-   * @var \Drupal\Core\Theme\ThemeManagerInterface
-   */
-  protected $themeManager;
-
-  /**
    * Constructs a \Drupal\Core\Theme\Registry object.
    *
    * @param string $root
@@ -166,16 +159,6 @@ class Registry implements DestructableInterface {
   }
 
   /**
-   * Sets the theme manager.
-   *
-   * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
-   *   The theme manager.
-   */
-  public function setThemeManager(ThemeManagerInterface $theme_manager) {
-    $this->themeManager = $theme_manager;
-  }
-
-  /**
    * Initializes a theme with a certain name.
    *
    * This function does to much magic, so it should be replaced by another
@@ -190,7 +173,7 @@ class Registry implements DestructableInterface {
     }
     // Unless instantiated for a specific theme, use globals.
     if (!isset($theme_name)) {
-      $this->theme = $this->themeManager->getActiveTheme();
+      $this->theme = \Drupal::theme()->getActiveTheme();
     }
     // Instead of the active theme, a specific theme was requested.
     else {
@@ -343,9 +326,9 @@ class Registry implements DestructableInterface {
     // Finally, hooks provided by the theme itself.
     $this->processExtension($cache, $this->theme->getName(), 'theme', $this->theme->getName(), $this->theme->getPath());
 
-    // Let modules and themes alter the registry.
+    // Let modules alter the registry.
     $this->moduleHandler->alter('theme_registry', $cache);
-    $this->themeManager->alterForTheme($this->theme, 'theme_registry', $cache);
+    // @todo Do we want to allow themes to take part?
 
     // @todo Implement more reduction of the theme registry entry.
     // Optimize the registry to not have empty arrays for functions.

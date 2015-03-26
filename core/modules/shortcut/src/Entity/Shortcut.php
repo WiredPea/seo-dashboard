@@ -163,7 +163,6 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
     $fields['langcode'] = BaseFieldDefinition::create('language')
       ->setLabel(t('Language'))
       ->setDescription(t('The language code of the shortcut.'))
-      ->setTranslatable(TRUE)
       ->setDisplayOptions('view', array(
         'type' => 'hidden',
       ))

@@ -75,9 +75,9 @@ class Node extends DrupalSqlBase implements SourceEntityInterface {
   /**
    * {@inheritdoc}
    */
-  protected function initializeIterator() {
+  protected function runQuery() {
     $this->filterDefaultFormat = $this->variableGet('filter_default_format', '1');
-    return parent::initializeIterator();
+    return parent::runQuery();
   }
 
   /**

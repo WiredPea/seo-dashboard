@@ -1,4 +1,4 @@
-langcode: en
+langcode: und
 status: true
 dependencies:
   module:
@@ -85,7 +85,7 @@ display:
           hide_alter_empty: true
           entity_type: entity_test
           entity_field: name
-          plugin_id: field
+          plugin_id: standard
         operations:
           id: operations
           table: entity_test

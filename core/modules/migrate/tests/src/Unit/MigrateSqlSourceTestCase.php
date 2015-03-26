@@ -7,6 +7,9 @@
 
 namespace Drupal\Tests\migrate\Unit;
 
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\migrate\Source;
+
 /**
  * Base class for Migrate module source unit tests.
  */
@@ -84,7 +87,13 @@ abstract class MigrateSqlSourceTestCase extends MigrateTestCase {
     $migration->expects($this->any())
       ->method('getSourcePlugin')
       ->will($this->returnValue($plugin));
-    $this->source = $plugin;
+    $migrateExecutable = $this->getMockBuilder('Drupal\migrate\MigrateExecutable')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $this->source = new TestSource($migration, $migrateExecutable);
+
+    $cache = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
+    $this->source->setCache($cache);
   }
 
   /**
@@ -103,4 +112,10 @@ abstract class MigrateSqlSourceTestCase extends MigrateTestCase {
     return $row->getSourceProperty($key);
   }
 
+}
+
+class TestSource extends Source {
+  public function setCache(CacheBackendInterface $cache) {
+    $this->cache = $cache;
+  }
 }

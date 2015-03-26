@@ -28,7 +28,7 @@ class EntityReferenceAdminTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'field_ui', 'entity_reference', 'path', 'taxonomy', 'block', 'views');
+  public static $modules = array('node', 'field_ui', 'entity_reference', 'path', 'taxonomy', 'block');
 
 
   /**
@@ -62,13 +62,7 @@ class EntityReferenceAdminTest extends WebTestBase {
     $bundle_path = 'admin/structure/types/manage/' . $this->type;
 
     // First step: 'Add new field' on the 'Manage fields' page.
-    $this->drupalGet($bundle_path . '/fields/add-field');
-
-    // Check if the commonly referenced entity types appear in the list.
-    $this->assertOption('edit-new-storage-type', 'field_ui:entity_reference:node');
-    $this->assertOption('edit-new-storage-type', 'field_ui:entity_reference:user');
-
-    $this->drupalPostForm(NULL, array(
+    $this->drupalPostForm($bundle_path . '/fields/add-field', array(
       'label' => 'Test label',
       'field_name' => 'test',
       'new_storage_type' => 'entity_reference',
@@ -84,7 +78,7 @@ class EntityReferenceAdminTest extends WebTestBase {
     $this->drupalPostForm(NULL, array(), t('Save field settings'));
 
     // The base handler should be selected by default.
-    $this->assertFieldByName('field[settings][handler]', 'default:node');
+    $this->assertFieldByName('field[settings][handler]', 'default');
 
     // The base handler settings should be displayed.
     $entity_type_id = 'node';
@@ -148,14 +142,6 @@ class EntityReferenceAdminTest extends WebTestBase {
     $this->drupalPostForm($bundle_path . '/fields/' . $field_name . '/storage', $edit, t('Save field settings'));
     $this->drupalGet($bundle_path . '/fields/' . $field_name);
     $this->assertFieldByName('field[settings][handler_settings][filter][type]', '_none');
-
-    // Try to select the views handler.
-    $edit = array(
-      'field[settings][handler]' => 'views',
-    );
-    $this->drupalPostAjaxForm($bundle_path . '/fields/' . $field_name, $edit, 'field[settings][handler]');
-    $this->drupalPostForm(NULL, $edit, t('Save settings'));
-    $this->assertResponse(200);
   }
 
 

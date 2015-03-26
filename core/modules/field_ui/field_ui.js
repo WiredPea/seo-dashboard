@@ -54,7 +54,7 @@
 
   Drupal.behaviors.fieldUIDisplayOverview = {
     attach: function (context, settings) {
-      $(context).find('table#field-display-overview').once('field-display-overview').each(function () {
+      $(context).find('table#field-display-overview').once('field-display-overview', function () {
         Drupal.fieldUIOverview.attach(this, settings.fieldUIRowsData, Drupal.fieldUIDisplayOverview);
       });
     }
@@ -195,7 +195,10 @@
 
       if (rowNames.length) {
         // Add a throbber next each of the ajaxElements.
-        $(ajaxElements).after('<div class="ajax-progress ajax-progress-throbber"><div class="throbber">&nbsp;</div></div>');
+        var $throbber = $('<div class="ajax-progress ajax-progress-throbber"><div class="throbber">&nbsp;</div></div>');
+        $(ajaxElements)
+          .addClass('progress-disabled')
+          .after($throbber);
 
         // Fire the Ajax update.
         $('input[name=refresh_rows]').val(rowNames.join(' '));

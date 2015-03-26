@@ -17,7 +17,7 @@ label: test_argument_dependency
 module: views
 description: ''
 tag: ''
-base_table: node_field_data
+base_table: node
 base_field: nid
 core: 8.x
 display:
@@ -98,7 +98,8 @@ display:
             html: false
           hide_empty: false
           empty_zero: false
-          plugin_id: field
+          link_to_node: true
+          plugin_id: node
           relationship: none
           group_type: group
           admin_label: ''
@@ -258,7 +259,8 @@ display:
             html: false
           hide_empty: false
           empty_zero: false
-          plugin_id: field
+          link_to_node: true
+          plugin_id: node
           relationship: none
           group_type: group
           admin_label: ''

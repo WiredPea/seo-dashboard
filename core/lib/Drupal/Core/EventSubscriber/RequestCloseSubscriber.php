@@ -23,10 +23,7 @@ class RequestCloseSubscriber implements EventSubscriberInterface {
   protected $moduleHandler;
 
   /**
-   * Constructs a new RequestCloseSubscriber instance.
-   *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
+   * Constructor.
    */
   function __construct(ModuleHandlerInterface $module_handler) {
     $this->moduleHandler = $module_handler;

@@ -62,11 +62,4 @@ class Editor extends Plugin {
    */
   public $is_xss_safe;
 
-  /**
-   * A list of element types this text editor supports.
-   *
-   * @var string[]
-   */
-  public $supported_element_types;
-
 }

@@ -18,16 +18,16 @@
 #}
 {%
   set classes = [
-    'list-group',
+    'admin-list',
     compact ? 'compact',
   ]
 %}
 {% if content %}
   <dl{{ attributes.addClass(classes) }}>
     {% for item in content %}
-      <dt class="list-group__link">{{ item.link }}</dt>
+      <dt>{{ item.link }}</dt>
       {% if item.description %}
-        <dd class="list-group__description">{{ item.description }}</dd>
+        <dd>{{ item.description }}</dd>
       {% endif %}
     {% endfor %}
   </dl>

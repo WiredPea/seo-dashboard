@@ -154,9 +154,8 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
     $form += array('#parents' => array());
 
     // Let each widget generate the form elements.
-    foreach ($this->getComponents() as $name => $options) {
+    foreach ($entity as $name => $items) {
       if ($widget = $this->getRenderer($name)) {
-        $items = $entity->get($name);
         $items->filterEmptyItems();
         $form[$name] = $widget->form($items, $form, $form_state);
         $form[$name]['#access'] = $items->access('edit');
@@ -164,7 +163,7 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
         // Assign the correct weight. This duplicates the reordering done in
         // processForm(), but is needed for other forms calling this method
         // directly.
-        $form[$name]['#weight'] = $options['weight'];
+        $form[$name]['#weight'] = $this->getComponent($name)['weight'];
       }
     }
 

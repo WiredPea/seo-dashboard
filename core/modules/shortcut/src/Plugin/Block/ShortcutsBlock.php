@@ -8,7 +8,6 @@
 namespace Drupal\shortcut\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
-use Drupal\Core\Session\AccountInterface;
 
 /**
  * Provides a 'Shortcut' block.
@@ -28,13 +27,6 @@ class ShortcutsBlock extends BlockBase {
     return array(
       shortcut_renderable_links(shortcut_current_displayed_set()),
     );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function blockAccess(AccountInterface $account) {
-    return $account->hasPermission('access shortcuts');
   }
 
 }

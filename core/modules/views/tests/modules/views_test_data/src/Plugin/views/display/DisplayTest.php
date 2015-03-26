@@ -149,15 +149,4 @@ class DisplayTest extends DisplayPluginBase {
     ];
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function validate() {
-    $errors = parent::validate();
-    foreach ($this->view->displayHandlers as $display_handler) {
-      $errors[] = 'error';
-    }
-    return $errors;
-  }
-
 }

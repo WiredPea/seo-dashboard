@@ -9,7 +9,6 @@ namespace Drupal\quickedit;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Form\FormState;
-use Drupal\Core\Render\RendererInterface;
 use Drupal\user\PrivateTempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -49,13 +48,6 @@ class QuickEditController extends ControllerBase {
   protected $editorSelector;
 
   /**
-   * The renderer.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
    * Constructs a new QuickEditController.
    *
    * @param \Drupal\user\PrivateTempStoreFactory $temp_store_factory
@@ -64,14 +56,11 @@ class QuickEditController extends ControllerBase {
    *   The in-place editing metadata generator.
    * @param \Drupal\quickedit\EditorSelectorInterface $editor_selector
    *   The in-place editor selector.
-   * @param \Drupal\Core\Render\RendererInterface $renderer
-   *   The renderer.
    */
-  public function __construct(PrivateTempStoreFactory $temp_store_factory, MetadataGeneratorInterface $metadata_generator, EditorSelectorInterface $editor_selector, RendererInterface $renderer) {
+  public function __construct(PrivateTempStoreFactory $temp_store_factory, MetadataGeneratorInterface $metadata_generator, EditorSelectorInterface $editor_selector) {
     $this->tempStoreFactory = $temp_store_factory;
     $this->metadataGenerator = $metadata_generator;
     $this->editorSelector = $editor_selector;
-    $this->renderer = $renderer;
   }
 
   /**
@@ -81,8 +70,7 @@ class QuickEditController extends ControllerBase {
     return new static(
       $container->get('user.private_tempstore'),
       $container->get('quickedit.metadata.generator'),
-      $container->get('quickedit.editor.selector'),
-      $container->get('renderer')
+      $container->get('quickedit.editor.selector')
     );
   }
 
@@ -216,7 +204,7 @@ class QuickEditController extends ControllerBase {
       $response->addCommand(new FieldFormSavedCommand($output, $other_view_modes));
     }
     else {
-      $output = $this->renderer->renderRoot($form);
+      $output = drupal_render($form);
       // When working with a hidden form, we don't want its CSS/JS to be loaded.
       if ($request->request->get('nocssjs') !== 'true') {
         $response->setAttachments($form['#attached']);
@@ -226,9 +214,9 @@ class QuickEditController extends ControllerBase {
       $errors = $form_state->getErrors();
       if (count($errors)) {
         $status_messages = array(
-          '#type' => 'status_messages'
+          '#theme' => 'status_messages'
         );
-        $response->addCommand(new FieldFormValidationErrorsCommand($this->renderer->renderRoot($status_messages)));
+        $response->addCommand(new FieldFormValidationErrorsCommand(drupal_render($status_messages)));
       }
     }
 
@@ -275,7 +263,7 @@ class QuickEditController extends ControllerBase {
       $output = $this->moduleHandler()->invoke($module, 'quickedit_render_field', $args);
     }
 
-    return $this->renderer->renderRoot($output);
+    return drupal_render($output);
   }
 
   /**

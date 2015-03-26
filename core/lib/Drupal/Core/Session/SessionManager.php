@@ -121,7 +121,7 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
     }
 
     if (empty($result)) {
-      // @todo Remove global in https://www.drupal.org/node/2228393
+      // @todo Remove global in https://www.drupal.org/node/2286971
       global $_session_user;
       $_session_user = new AnonymousUserSession();
 

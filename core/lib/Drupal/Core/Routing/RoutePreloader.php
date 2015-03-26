@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Routing;
 
+use Drupal\Core\ContentNegotiation;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -37,6 +38,13 @@ class RoutePreloader implements EventSubscriberInterface {
   protected $state;
 
   /**
+   * The content negotiation.
+   *
+   * @var \Drupal\Core\ContentNegotiation
+   */
+  protected $negotiation;
+
+  /**
    * Contains the non-admin routes while rebuilding the routes.
    *
    * @var array
@@ -50,10 +58,13 @@ class RoutePreloader implements EventSubscriberInterface {
    *   The route provider.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
+   * @param \Drupal\Core\ContentNegotiation $negotiation
+   *   The content negotiation.
    */
-  public function __construct(RouteProviderInterface $route_provider, StateInterface $state) {
+  public function __construct(RouteProviderInterface $route_provider, StateInterface $state, ContentNegotiation $negotiation) {
     $this->routeProvider = $route_provider;
     $this->state = $state;
+    $this->negotiation = $negotiation;
   }
 
   /**
@@ -64,7 +75,7 @@ class RoutePreloader implements EventSubscriberInterface {
    */
   public function onRequest(KernelEvent $event) {
     // Just preload on normal HTML pages, as they will display menu links.
-    if ($event->getRequest()->getRequestFormat() == 'html') {
+    if ($this->negotiation->getContentType($event->getRequest()) == 'html') {
       $this->loadNonAdminRoutes();
     }
   }

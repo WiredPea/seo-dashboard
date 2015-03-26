@@ -17,6 +17,8 @@ use Drupal\field\Entity\FieldConfig;
  * @group file
  */
 class FileFieldValidateTest extends FileFieldTestBase {
+  protected $field;
+  protected $node_type;
 
   /**
    * Tests the required property on file fields.

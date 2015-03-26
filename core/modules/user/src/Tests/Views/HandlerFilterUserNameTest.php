@@ -102,7 +102,8 @@ class HandlerFilterUserNameTest extends ViewTestBase {
       'options[value]' => implode(', ', $users)
     );
     $this->drupalPostForm($path, $edit, t('Apply'));
-    $this->assertRaw(t('There are no entities matching "%value".', array('%value' => implode(', ', $users))));
+    $message = \Drupal::translation()->formatPlural(count($users), 'Unable to find user: @users', 'Unable to find users: @users', array('@users' => implode(', ', $users)));
+    $this->assertText($message);
 
     // Pass in an invalid username and a valid username.
     $random_name = $this->randomMachineName();
@@ -113,7 +114,8 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     );
     $users = array($users[0]);
     $this->drupalPostForm($path, $edit, t('Apply'));
-    $this->assertRaw(t('There are no entities matching "%value".', array('%value' => implode(', ', $users))));
+    $message = \Drupal::translation()->formatPlural(count($users), 'Unable to find user: @users', 'Unable to find users: @users', array('@users' => implode(', ', $users)));
+    $this->assertRaw($message);
 
     // Pass in just valid usernames.
     $users = $this->names;
@@ -122,7 +124,8 @@ class HandlerFilterUserNameTest extends ViewTestBase {
       'options[value]' => implode(', ', $users)
     );
     $this->drupalPostForm($path, $edit, t('Apply'));
-    $this->assertNoRaw(t('There are no entities matching "%value".', array('%value' => implode(', ', $users))));
+    $message = \Drupal::translation()->formatPlural(count($users), 'Unable to find user: @users', 'Unable to find users: @users', array('@users' => implode(', ', $users)));
+    $this->assertNoRaw($message);
   }
 
   /**
@@ -138,16 +141,18 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     $users = array_map('strtolower', $users);
     $options['query']['uid'] = implode(', ', $users);
     $this->drupalGet($path, $options);
-    $this->assertRaw(t('There are no entities matching "%value".', array('%value' => implode(', ', $users))));
+    $message = \Drupal::translation()->formatPlural(count($users), 'Unable to find user: @users', 'Unable to find users: @users', array('@users' => implode(', ', $users)));
+    $this->assertRaw($message);
 
     // Pass in an invalid username and a valid username.
     $users = array($this->randomMachineName(), $this->names[0]);
-    $users = array_map('strtolower', $users);
     $options['query']['uid'] = implode(', ', $users);
+    $users = array_map('strtolower', $users);
     $users = array($users[0]);
 
     $this->drupalGet($path, $options);
-    $this->assertRaw(t('There are no entities matching "%value".', array('%value' => implode(', ', $users))));
+    $message = \Drupal::translation()->formatPlural(count($users), 'Unable to find user: @users', 'Unable to find users: @users', array('@users' => implode(', ', $users)));
+    $this->assertRaw($message);
 
     // Pass in just valid usernames.
     $users = $this->names;

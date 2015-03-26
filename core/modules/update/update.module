@@ -388,18 +388,22 @@ function update_create_fetch_task($project) {
 
 /**
  * Refreshes the release data after loading the necessary include file.
+ *
+ * @see _update_refresh()
  */
 function update_refresh() {
-  \Drupal::service('update.manager')->refreshUpdateData();
+  module_load_include('inc', 'update', 'update.fetch');
+  _update_refresh();
 }
 
 /**
  * Attempts to fetch update data after loading the necessary include file.
  *
- * @see \Drupal\update\UpdateProcessor::fetchData()
+ * @see _update_fetch_data()
  */
 function update_fetch_data() {
- \Drupal::service('update.processor')->fetchData();
+  module_load_include('inc', 'update', 'update.fetch');
+  _update_fetch_data();
 }
 
 /**

@@ -4,23 +4,17 @@ namespace React\Promise;
 
 function resolve($promiseOrValue = null)
 {
-    if (!$promiseOrValue instanceof PromiseInterface) {
-        return new FulfilledPromise($promiseOrValue);
-    }
-
-    if ($promiseOrValue instanceof ExtendedPromiseInterface) {
+    if ($promiseOrValue instanceof PromiseInterface) {
         return $promiseOrValue;
     }
 
-    return new Promise(function ($resolve, $reject, $notify) use ($promiseOrValue) {
-        $promiseOrValue->then($resolve, $reject, $notify);
-    });
+    return new FulfilledPromise($promiseOrValue);
 }
 
 function reject($promiseOrValue = null)
 {
     if ($promiseOrValue instanceof PromiseInterface) {
-        return resolve($promiseOrValue)->then(function ($value) {
+        return $promiseOrValue->then(function ($value) {
             return new RejectedPromise($value);
         });
     }
@@ -43,10 +37,10 @@ function race($promisesOrValues)
                 return resolve();
             }
 
-            return new Promise(function ($resolve, $reject, $notify) use ($array) {
+            return new Promise(function ($resolve, $reject, $progress) use ($array) {
                 foreach ($array as $promiseOrValue) {
                     resolve($promiseOrValue)
-                        ->done($resolve, $reject, $notify);
+                        ->then($resolve, $reject, $progress);
                 }
             });
         });
@@ -68,7 +62,7 @@ function some($promisesOrValues, $howMany)
                 return resolve([]);
             }
 
-            return new Promise(function ($resolve, $reject, $notify) use ($array, $howMany) {
+            return new Promise(function ($resolve, $reject, $progress) use ($array, $howMany) {
                 $len       = count($array);
                 $toResolve = min($howMany, $len);
                 $toReject  = ($len - $toResolve) + 1;
@@ -101,7 +95,7 @@ function some($promisesOrValues, $howMany)
                     };
 
                     resolve($promiseOrValue)
-                        ->done($fulfiller, $rejecter, $notify);
+                        ->then($fulfiller, $rejecter, $progress);
                 }
             });
         });
@@ -115,14 +109,14 @@ function map($promisesOrValues, callable $mapFunc)
                 return resolve([]);
             }
 
-            return new Promise(function ($resolve, $reject, $notify) use ($array, $mapFunc) {
+            return new Promise(function ($resolve, $reject, $progress) use ($array, $mapFunc) {
                 $toResolve = count($array);
                 $values    = [];
 
                 foreach ($array as $i => $promiseOrValue) {
                     resolve($promiseOrValue)
                         ->then($mapFunc)
-                        ->done(
+                        ->then(
                             function ($mapped) use ($i, &$values, &$toResolve, $resolve) {
                                 $values[$i] = $mapped;
 
@@ -131,7 +125,7 @@ function map($promisesOrValues, callable $mapFunc)
                                 }
                             },
                             $reject,
-                            $notify
+                            $progress
                         );
                 }
             });
@@ -163,34 +157,4 @@ function reduce($promisesOrValues, callable $reduceFunc , $initialValue = null)
 
             return array_reduce($array, $wrappedReduceFunc, $initialValue);
         });
-}
-
-// Internal functions
-function _checkTypehint(callable $callback, $object)
-{
-    if (!is_object($object)) {
-        return true;
-    }
-
-    if (is_array($callback)) {
-        $callbackReflection = new \ReflectionMethod($callback[0], $callback[1]);
-    } elseif (is_object($callback) && !$callback instanceof \Closure) {
-        $callbackReflection = new \ReflectionMethod($callback, '__invoke');
-    } else {
-        $callbackReflection = new \ReflectionFunction($callback);
-    }
-
-    $parameters = $callbackReflection->getParameters();
-
-    if (!isset($parameters[0])) {
-        return true;
-    }
-
-    $expectedException = $parameters[0];
-
-    if (!$expectedException->getClass()) {
-        return true;
-    }
-
-    return $expectedException->getClass()->isInstance($object);
 }

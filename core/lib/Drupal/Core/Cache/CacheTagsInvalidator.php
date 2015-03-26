@@ -42,19 +42,6 @@ class CacheTagsInvalidator implements CacheTagsInvalidatorInterface {
   }
 
   /**
-   * Reset statically cached tags in all cache tag checksum services.
-   *
-   * This is only used by tests.
-   */
-  public function resetChecksums() {
-    foreach ($this->invalidators as $invalidator) {
-      if ($invalidator instanceof CacheTagsChecksumInterface) {
-        $invalidator->reset();
-      }
-    }
-  }
-
-  /**
    * Adds a cache tags invalidator.
    *
    * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $invalidator

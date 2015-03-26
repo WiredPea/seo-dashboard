@@ -81,8 +81,6 @@ class TextTrimmedFormatter extends FormatterBase {
       $element['#text_summary_trim_length'] = $this->getSetting('trim_length');
     };
 
-    // The ProcessedText element already handles cache context & tag bubbling.
-    // @see \Drupal\filter\Element\ProcessedText::preRenderText()
     foreach ($items as $delta => $item) {
       $elements[$delta] = array(
         '#type' => 'processed_text',

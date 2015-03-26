@@ -1,4 +1,4 @@
-langcode: en
+langcode: und
 status: true
 dependencies: {  }
 id: test_view_entity_test_data
@@ -33,7 +33,7 @@ display:
           hide_empty: false
           id: id
           table: entity_test_update
-          plugin_id: field
+          plugin_id: numeric
           entity_type: entity_test_update
           entity_field: id
         name:
@@ -50,7 +50,7 @@ display:
           hide_empty: false
           id: name
           table: entity_test_update_data
-          plugin_id: field
+          plugin_id: standard
           entity_type: entity_test_update
           entity_field: id
       pager:

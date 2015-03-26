@@ -13,20 +13,12 @@ namespace Drupal\Core\TypedData;
 interface TranslatableInterface {
 
   /**
-   * Returns the translation language.
+   * Returns the default language.
    *
    * @return \Drupal\Core\Language\LanguageInterface
    *   The language object.
    */
   public function language();
-
-  /**
-   * Checks whether the translation is the default one.
-   *
-   * @return bool
-   *   TRUE if the translation is the default one, FALSE otherwise.
-   */
-  public function isDefaultTranslation();
 
   /**
    * Returns the languages the data is translated to.

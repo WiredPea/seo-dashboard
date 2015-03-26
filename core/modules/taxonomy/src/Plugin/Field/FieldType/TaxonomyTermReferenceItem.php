@@ -20,9 +20,8 @@ use Drupal\taxonomy\Entity\Vocabulary;
  *
  * @FieldType(
  *   id = "taxonomy_term_reference",
- *   label = @Translation("Taxonomy term"),
+ *   label = @Translation("Term Reference"),
  *   description = @Translation("This field stores a reference to a taxonomy term."),
- *   category = @Translation("Reference"),
  *   default_widget = "options_select",
  *   default_formatter = "taxonomy_term_reference_link",
  *   list_class = "\Drupal\Core\Field\EntityReferenceFieldItemList",
@@ -45,15 +44,6 @@ class TaxonomyTermReferenceItem extends EntityReferenceItem implements OptionsPr
         ),
       ),
     ) + parent::defaultStorageSettings();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function defaultFieldSettings() {
-    return array(
-      'handler' => 'default:taxonomy_term',
-    ) + parent::defaultFieldSettings();
   }
 
   /**

@@ -39,7 +39,13 @@
               <h1 class="title" id="page-title">{{ title }}</h1>
             {% endif %}
             {{ page.content }}
-            {{ page.messages }}
+            {% if messages %}
+              <div id="messages">
+                <div class="section clearfix">
+                  {{ messages }}
+                </div>
+              </div>
+            {% endif %}
           </section>
         </main>
       </div>

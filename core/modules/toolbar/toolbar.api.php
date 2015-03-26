@@ -99,6 +99,7 @@ function hook_toolbar() {
       '#title' => t('Shopping cart'),
       '#url' => Url::fromRoute('cart'),
       '#options' => array(
+        'html' => FALSE,
         'attributes' => array(
           'title' => t('Shopping cart'),
         ),

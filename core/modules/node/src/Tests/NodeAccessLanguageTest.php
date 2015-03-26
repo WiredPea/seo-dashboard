@@ -9,7 +9,6 @@ namespace Drupal\node\Tests;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\node\Entity\NodeType;
 
 /**
  * Tests node_access and db_select() with node_access tag functionality with
@@ -29,7 +28,7 @@ class NodeAccessLanguageTest extends NodeTestBase {
   protected function setUp() {
     parent::setUp();
 
-    node_access_test_add_field(NodeType::load('page'));
+    node_access_test_add_field(entity_load('node_type', 'page'));
 
     // After enabling a node access module, the access table has to be rebuild.
     node_access_rebuild();

@@ -85,6 +85,7 @@ class LinkGenerator implements LinkGeneratorInterface {
     $variables['options'] += array(
       'attributes' => array(),
       'query' => array(),
+      'html' => FALSE,
       'language' => NULL,
       'set_active_class' => FALSE,
       'absolute' => FALSE,
@@ -134,10 +135,9 @@ class LinkGenerator implements LinkGeneratorInterface {
     // it here in an HTML argument context, we need to encode it properly.
     $url = String::checkPlain($url->toString());
 
-    // Make sure the link text is sanitized.
-    $safe_text = SafeMarkup::escape($variables['text']);
-
-    return SafeMarkup::set('<a href="' . $url . '"' . $attributes . '>' . $safe_text . '</a>');
+    // Sanitize the link text if necessary.
+    $text = $variables['options']['html'] ? $variables['text'] : String::checkPlain($variables['text']);
+    return SafeMarkup::set('<a href="' . $url . '"' . $attributes . '>' . $text . '</a>');
   }
 
 }

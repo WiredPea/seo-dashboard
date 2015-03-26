@@ -16,7 +16,7 @@ use Drupal\migrate\Plugin\MigrateIdMapInterface;
 /**
  * Defines a migrate executable class.
  */
-class MigrateExecutable implements MigrateExecutableInterface {
+class MigrateExecutable {
   use StringTranslationTrait;
 
   /**
@@ -162,7 +162,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
   /**
    * The source.
    *
-   * @var \Drupal\migrate\Plugin\MigrateSourceInterface
+   * @var \Drupal\migrate\Source
    */
   protected $source;
 
@@ -219,22 +219,18 @@ class MigrateExecutable implements MigrateExecutableInterface {
    *
    * Makes sure source is initialized based on migration settings.
    *
-   * @return \Drupal\migrate\Plugin\MigrateSourceInterface
+   * @return \Drupal\migrate\Source
    *   The source.
    */
-  protected function getSource() {
+  public function getSource() {
     if (!isset($this->source)) {
-      $this->source = $this->migration->getSourcePlugin();
-
-      // @TODO, find out how to remove this.
-      // @see https://drupal.org/node/2443617
-      $this->source->migrateExecutable = $this;
+      $this->source = new Source($this->migration, $this);
     }
     return $this->source;
   }
 
   /**
-   * {@inheritdoc}
+   * Performs an import operation - migrate items from source to destination.
    */
   public function import() {
     // Knock off migration if the requirements haven't been met.
@@ -260,11 +256,13 @@ class MigrateExecutable implements MigrateExecutableInterface {
     }
     catch (\Exception $e) {
       $this->message->display(
-        $this->t('Migration failed with source plugin exception: !e', array('!e' => $e->getMessage())), 'error');
+        $this->t('Migration failed with source plugin exception: !e',
+          array('!e' => $e->getMessage())), 'error');
       return MigrationInterface::RESULT_FAILED;
     }
 
     $destination = $this->migration->getDestinationPlugin();
+
     while ($source->valid()) {
       $row = $source->current();
       if ($this->sourceIdValues = $row->getSourceIdValues()) {
@@ -349,7 +347,22 @@ class MigrateExecutable implements MigrateExecutableInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Processes a row.
+   *
+   * @param \Drupal\migrate\Row $row
+   *   The $row to be processed.
+   * @param array $process
+   *   (optional) A process pipeline configuration. If not set, the top level
+   *   process configuration in the migration entity is used.
+   * @param mixed $value
+   *   (optional) Initial value of the pipeline for the first destination.
+   *   Usually setting this is not necessary as $process typically starts with
+   *   a 'get'. This is useful only when the $process contains a single
+   *   destination and needs to access a value outside of the source. See
+   *   \Drupal\migrate\Plugin\migrate\process\Iterator::transformKey for an
+   *   example.
+   *
+   * @throws \Drupal\migrate\MigrateException
    */
   public function processRow(Row $row, array $process = NULL, $value = NULL) {
     foreach ($this->migration->getProcessPlugins($process) as $destination => $plugins) {
@@ -431,7 +444,10 @@ class MigrateExecutable implements MigrateExecutableInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Returns the time limit.
+   *
+   * @return null|int
+   *   The time limit, NULL if no limit or if the units were not in seconds.
    */
   public function getTimeLimit() {
     $limit = $this->limit;
@@ -444,21 +460,31 @@ class MigrateExecutable implements MigrateExecutableInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Passes messages through to the map class.
+   *
+   * @param string $message
+   *   The message to record.
+   * @param int $level
+   *   (optional) Message severity (defaults to MESSAGE_ERROR).
    */
   public function saveMessage($message, $level = MigrationInterface::MESSAGE_ERROR) {
     $this->migration->getIdMap()->saveMessage($this->sourceIdValues, $message, $level);
   }
 
   /**
-   * {@inheritdoc}
+   * Queues messages to be later saved through the map class.
+   *
+   * @param string $message
+   *   The message to record.
+   * @param int $level
+   *   (optional) Message severity (defaults to MESSAGE_ERROR).
    */
   public function queueMessage($message, $level = MigrationInterface::MESSAGE_ERROR) {
     $this->queuedMessages[] = array('message' => $message, 'level' => $level);
   }
 
   /**
-   * {@inheritdoc}
+   * Saves any messages we've queued up to the message table.
    */
   public function saveQueuedMessages() {
     foreach ($this->queuedMessages as $queued_message) {
@@ -615,7 +641,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
    *   (optional) Whether to save the message in the migration's mapping table.
    *   Set to FALSE in contexts where this doesn't make sense.
    */
-  protected function handleException(\Exception $exception, $save = TRUE) {
+  public function handleException(\Exception $exception, $save = TRUE) {
     $result = Error::decodeException($exception);
     $message = $result['!message'] . ' (' . $result['%file'] . ':' . $result['%line'] . ')';
     if ($save) {

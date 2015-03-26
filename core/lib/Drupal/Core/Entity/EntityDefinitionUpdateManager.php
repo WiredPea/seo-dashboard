@@ -95,13 +95,7 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
    * {@inheritdoc}
    */
   public function applyUpdates() {
-    $change_list = $this->getChangeList();
-    if ($change_list) {
-      // getChangeList() only disables the cache and does not invalidate.
-      // In case there are changes, explictly invalidate caches.
-      $this->entityManager->clearCachedDefinitions();
-    }
-    foreach ($change_list as $entity_type_id => $change_list) {
+    foreach ($this->getChangeList() as $entity_type_id => $change_list) {
       // Process entity type definition changes before storage definitions ones
       // this is necessary when you change an entity type from non-revisionable
       // to revisionable and at the same time add revisionable fields to the
@@ -159,7 +153,7 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
    *     - DEFINITION_DELETED
    */
   protected function getChangeList() {
-    $this->entityManager->useCaches(FALSE);
+    $this->entityManager->clearCachedDefinitions();
     $change_list = array();
 
     foreach ($this->entityManager->getDefinitions() as $entity_type_id => $entity_type) {
@@ -213,8 +207,6 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
 
     // @todo Support deleting entity definitions when we support base field
     //   purging. See https://www.drupal.org/node/2282119.
-
-    $this->entityManager->useCaches(TRUE);
 
     return array_filter($change_list);
   }

@@ -15,9 +15,6 @@ use Symfony\Component\Validator\Mapping\ElementMetadata;
 use Symfony\Component\Validator\Tests\Fixtures\ConstraintA;
 use Symfony\Component\Validator\Tests\Fixtures\ConstraintB;
 
-/**
- * @group legacy
- */
 class LegacyElementMetadataTest extends \PHPUnit_Framework_TestCase
 {
     protected $metadata;

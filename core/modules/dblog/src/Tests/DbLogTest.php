@@ -147,7 +147,7 @@ class DbLogTest extends WebTestBase {
       'link'        => NULL,
       'user'        => $this->adminUser,
       'uid'         => $this->adminUser->id(),
-      'request_uri' => $base_root . \Drupal::request()->getRequestUri(),
+      'request_uri' => $base_root . request_uri(),
       'referer'     => \Drupal::request()->server->get('HTTP_REFERER'),
       'ip'          => '127.0.0.1',
       'timestamp'   => REQUEST_TIME,
@@ -444,7 +444,7 @@ class DbLogTest extends WebTestBase {
    * Logs in the admin user, creates a database log event, and tests the
    * functionality of clearing the database log through the admin interface.
    */
-  public function testDBLogAddAndClear() {
+  protected function testDBLogAddAndClear() {
     global $base_root;
     // Get a count of how many watchdog entries already exist.
     $count = db_query('SELECT COUNT(*) FROM {watchdog}')->fetchField();
@@ -456,7 +456,7 @@ class DbLogTest extends WebTestBase {
       'link'        => NULL,
       'user'        => $this->adminUser,
       'uid'         => $this->adminUser->id(),
-      'request_uri' => $base_root . \Drupal::request()->getRequestUri(),
+      'request_uri' => $base_root . request_uri(),
       'referer'     => \Drupal::request()->server->get('HTTP_REFERER'),
       'ip'          => '127.0.0.1',
       'timestamp'   => REQUEST_TIME,
@@ -479,7 +479,7 @@ class DbLogTest extends WebTestBase {
   /**
    * Tests the database log filter functionality at admin/reports/dblog.
    */
-  public function testFilter() {
+  protected function testFilter() {
     $this->drupalLogin($this->adminUser);
 
     // Clear the log to ensure that only generated entries will be found.

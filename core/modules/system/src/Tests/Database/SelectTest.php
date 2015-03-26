@@ -39,10 +39,10 @@ class SelectTest extends DatabaseTestBase {
     $records = $result->fetchAll();
 
     $query = (string) $query;
-    $expected = "/* Testing query comments */";
+    $expected = "/* Testing query comments */ SELECT test.name AS name, test.age AS age\nFROM \n{test} test";
 
     $this->assertEqual(count($records), 4, 'Returned the correct number of rows.');
-    $this->assertNotIdentical(FALSE, strpos($query, $expected), 'The flattened query contains the comment string.');
+    $this->assertEqual($query, $expected, 'The flattened query contains the comment string.');
   }
 
   /**
@@ -57,10 +57,10 @@ class SelectTest extends DatabaseTestBase {
     $records = $result->fetchAll();
 
     $query = (string) $query;
-    $expected = "/* Testing query comments SELECT nid FROM {node}; -- */";
+    $expected = "/* Testing query comments SELECT nid FROM {node}; -- */ SELECT test.name AS name, test.age AS age\nFROM \n{test} test";
 
     $this->assertEqual(count($records), 4, 'Returned the correct number of rows.');
-    $this->assertNotIdentical(FALSE, strpos($query, $expected), 'The flattened query contains the sanitised comment string.');
+    $this->assertEqual($query, $expected, 'The flattened query contains the sanitised comment string.');
   }
 
   /**

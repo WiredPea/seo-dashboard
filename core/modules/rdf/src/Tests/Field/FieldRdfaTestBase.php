@@ -63,6 +63,7 @@ abstract class FieldRdfaTestBase extends FieldUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
+    $this->installSchema('system', array('router'));
     \Drupal::service('router.builder')->rebuild();
   }
 

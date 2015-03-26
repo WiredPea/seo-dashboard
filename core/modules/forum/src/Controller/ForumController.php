@@ -7,7 +7,6 @@
 
 namespace Drupal\forum\Controller;
 
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityAccessControlHandlerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -191,7 +190,6 @@ class ForumController extends ControllerBase {
     if (empty($term->forum_container->value)) {
       $build['#attached']['feed'][] = array('taxonomy/term/' . $term->id() . '/feed', 'RSS - ' . $term->getName());
     }
-    $build['#cache']['tags'] = Cache::mergeTags(isset($build['#cache']['tags']) ? $build['#cache']['tags'] : [],  $config->getCacheTags());
 
     return [
       'action' => $this->buildActionLinks($config->get('vocabulary'), $term),

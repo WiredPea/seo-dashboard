@@ -8,7 +8,7 @@
 namespace Drupal\aggregator\Plugin\views\argument;
 
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\views\Plugin\views\argument\NumericArgument;
+use Drupal\views\Plugin\views\argument\Numeric;
 use Drupal\Component\Utility\String;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ViewsArgument("aggregator_fid")
  */
-class Fid extends NumericArgument {
+class Fid extends Numeric {
 
   /**
    * The entity manager service.

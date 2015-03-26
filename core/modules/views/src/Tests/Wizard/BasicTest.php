@@ -172,7 +172,7 @@ class BasicTest extends WizardTestBase {
    *
    * @see \Drupal\views_ui\ViewAddForm::form()
    */
-  public function testWizardForm() {
+  protected function testWizardForm() {
     $this->drupalGet('admin/structure/views/add');
 
     $result = $this->xpath('//small[@id = "edit-label-machine-name-suffix"]');

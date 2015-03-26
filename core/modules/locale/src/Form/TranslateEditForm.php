@@ -161,7 +161,7 @@ class TranslateEditForm extends TranslateFormBase {
         );
       }
     }
-    $form['pager']['#type'] = 'pager';
+    $form['pager']['#theme'] = 'pager';
     return $form;
   }
 

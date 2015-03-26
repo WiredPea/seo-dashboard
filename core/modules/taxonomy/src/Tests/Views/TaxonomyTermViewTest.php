@@ -11,7 +11,6 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\user\Entity\Role;
-use Drupal\user\RoleInterface;
 use Drupal\views\Views;
 
 /**
@@ -150,7 +149,7 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
     $tables = $query->getTables();
 
     // Ensure that the join to node_field_data is not added by default.
-    $this->assertEqual(['node_field_data', 'taxonomy_index'], array_keys($tables));
+    $this->assertEqual(['node', 'taxonomy_index'], array_keys($tables));
     // Ensure that the filter to the language column is not there by default.
     $condition = $query->conditions();
     // We only want to check the no. of conditions in the query.
@@ -158,7 +157,7 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
     $this->assertEqual(1, count($condition));
 
     // Clear permissions for anonymous users to check access for default views.
-    Role::load(RoleInterface::ANONYMOUS_ID)->revokePermission('access content')->save();
+    Role::load(DRUPAL_ANONYMOUS_RID)->revokePermission('access content')->save();
 
     // Test the default views disclose no data by default.
     $this->drupalLogout();

@@ -12,7 +12,6 @@ use Drupal\Core\Access\CheckProviderInterface;
 use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
-use Drupal\Core\DestructableInterface;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\RouteCollection;
@@ -21,7 +20,7 @@ use Symfony\Component\Routing\Route;
 /**
  * Managing class for rebuilding the router table.
  */
-class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
+class RouteBuilder implements RouteBuilderInterface {
 
   /**
    * The dumper to which we should send collected routes.
@@ -59,6 +58,13 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
   protected $moduleHandler;
 
   /**
+   * The route builder indicator.
+   *
+   * @var \Drupal\Core\Routing\RouteBuilderIndicatorInterface
+   */
+  protected $routeBuilderIndicator;
+
+  /**
    * The controller resolver.
    *
    * @var \Drupal\Core\Controller\ControllerResolverInterface
@@ -73,18 +79,11 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
   protected $routeCollection;
 
   /**
-   * Flag that indicates if we are currently rebuilding the routes.
+   * Flag that indiciates if we are currently rebuilding the routes.
    *
    * @var bool
    */
   protected $building = FALSE;
-
-  /**
-   * Flag that indicates if we should rebuild at the end of the request.
-   *
-   * @var bool
-   */
-  protected $rebuildNeeded = FALSE;
 
   /**
    * The check provider.
@@ -108,21 +107,17 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
    *   The controller resolver.
    * @param \Drupal\Core\Access\CheckProviderInterface $check_provider
    *   The check provider.
+   * @param \Drupal\Core\Routing\RouteBuilderIndicatorInterface $route_build_indicator
+   *   The route build indicator.
    */
-  public function __construct(MatcherDumperInterface $dumper, LockBackendInterface $lock, EventDispatcherInterface $dispatcher, ModuleHandlerInterface $module_handler, ControllerResolverInterface $controller_resolver, CheckProviderInterface $check_provider) {
+  public function __construct(MatcherDumperInterface $dumper, LockBackendInterface $lock, EventDispatcherInterface $dispatcher, ModuleHandlerInterface $module_handler, ControllerResolverInterface $controller_resolver, CheckProviderInterface $check_provider, RouteBuilderIndicatorInterface $route_build_indicator = NULL) {
     $this->dumper = $dumper;
     $this->lock = $lock;
     $this->dispatcher = $dispatcher;
     $this->moduleHandler = $module_handler;
     $this->controllerResolver = $controller_resolver;
+    $this->routeBuilderIndicator = $route_build_indicator;
     $this->checkProvider = $check_provider;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setRebuildNeeded() {
-    $this->rebuildNeeded = TRUE;
   }
 
   /**
@@ -144,6 +139,7 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
     $this->building = TRUE;
 
     $collection = new RouteCollection();
+    $this->routeCollection = $collection;
     foreach ($this->getRouteDefinitions() as $routes) {
       // The top-level 'routes_callback' is a list of methods in controller
       // syntax, see \Drupal\Core\Controller\ControllerResolver. These methods
@@ -180,6 +176,7 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
         $route = new Route($route_info['path'], $route_info['defaults'], $route_info['requirements'], $route_info['options']);
         $collection->add($name, $route);
       }
+
     }
 
     // DYNAMIC is supposed to be used to add new routes based upon all the
@@ -196,11 +193,12 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
     $this->dumper->addRoutes($collection);
     $this->dumper->dump();
 
+    $this->routeBuilderIndicator->setRebuildDone();
     $this->lock->release('router_rebuild');
     $this->dispatcher->dispatch(RoutingEvents::FINISHED, new Event());
     $this->building = FALSE;
 
-    $this->rebuildNeeded = FALSE;
+    $this->routeCollection = NULL;
 
     return TRUE;
   }
@@ -209,7 +207,7 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
    * {@inheritdoc}
    */
   public function rebuildIfNeeded() {
-    if ($this->rebuildNeeded) {
+    if ($this->routeBuilderIndicator->isRebuildNeeded()) {
       return $this->rebuild();
     }
     return FALSE;
@@ -218,11 +216,8 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
   /**
    * {@inheritdoc}
    */
-  public function destruct() {
-    // Rebuild routes only once at the end of the request lifecycle to not
-    // trigger multiple rebuilds and also make the page more responsive for the
-    // user.
-    $this->rebuildIfNeeded();
+  public function setRebuildNeeded() {
+    $this->routeBuilderIndicator->setRebuildNeeded();
   }
 
   /**

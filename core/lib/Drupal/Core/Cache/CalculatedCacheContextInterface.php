@@ -28,13 +28,12 @@ interface CalculatedCacheContextInterface {
    * A cache context service's name is used as a token (placeholder) cache key,
    * and is then replaced with the string returned by this method.
    *
-   * @param string|null $parameter
-   *   The parameter, or NULL to indicate all possible parameter values.
+   * @param string $parameter
+   *   The parameter.
    *
    * @return string
-   *   The string representation of the cache context. When $parameter is NULL,
-   *   a value representing all possible parameters must be generated.
+   *   The string representation of the cache context.
    */
-  public function getContext($parameter = NULL);
+  public function getContext($parameter);
 
 }

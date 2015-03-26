@@ -18,7 +18,7 @@ use Drupal\Core\TypedData\Type\DateTimeInterface;
  *   label = @Translation("String")
  * )
  */
-class Timestamp extends IntegerData implements DateTimeInterface {
+class Timestamp extends Integer implements DateTimeInterface {
 
   /**
    * The data value as a UNIX timestamp.

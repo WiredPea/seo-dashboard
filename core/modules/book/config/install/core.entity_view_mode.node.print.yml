@@ -5,8 +5,4 @@ cache: true
 targetEntityType: node
 dependencies:
   module:
-    - book
     - node
-  enforced:
-    module:
-      - book

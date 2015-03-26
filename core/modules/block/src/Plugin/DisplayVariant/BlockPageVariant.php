@@ -11,7 +11,6 @@ use Drupal\block\BlockRepositoryInterface;
 use Drupal\block\Event\BlockContextEvent;
 use Drupal\block\Event\BlockEvents;
 use Drupal\Core\Block\MainContentBlockPluginInterface;
-use Drupal\Core\Block\MessagesBlockPluginInterface;
 use Drupal\Core\Display\PageVariantInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityViewBuilderInterface;
@@ -22,14 +21,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Provides a page display variant that decorates the main content with blocks.
- *
- * To ensure essential information is displayed, each essential part of a page
- * has a corresponding block plugin interface, so that BlockPageVariant can
- * automatically provide a fallback in case no block for each of these
- * interfaces is placed.
- *
- * @see \Drupal\Core\Block\MainContentBlockPluginInterface
- * @see \Drupal\Core\Block\MessagesBlockPluginInterface
  *
  * @PageDisplayVariant(
  *   id = "block_page",
@@ -119,9 +110,8 @@ class BlockPageVariant extends VariantBase implements PageVariantInterface, Cont
    * {@inheritdoc}
    */
   public function build() {
-    // Track whether blocks showing the main content and messages are displayed.
+    // Track whether a block that shows the main content is displayed or not.
     $main_content_block_displayed = FALSE;
-    $messages_block_displayed = FALSE;
 
     $build = [
       '#cache' => [
@@ -138,9 +128,6 @@ class BlockPageVariant extends VariantBase implements PageVariantInterface, Cont
           $block_plugin->setMainContent($this->mainContent);
           $main_content_block_displayed = TRUE;
         }
-        elseif ($block_plugin instanceof MessagesBlockPluginInterface) {
-          $messages_block_displayed = TRUE;
-        }
         $build[$region][$key] = $this->blockViewBuilder->view($block);
       }
       if (!empty($build[$region])) {
@@ -155,14 +142,6 @@ class BlockPageVariant extends VariantBase implements PageVariantInterface, Cont
     // the main content they came for.
     if (!$main_content_block_displayed) {
       $build['content']['system_main'] = $this->mainContent;
-    }
-
-    // If no block displays status messages, still render them.
-    if (!$messages_block_displayed) {
-      $build['content']['messages'] = [
-        '#weight' => -1000,
-        '#type' => 'status_messages',
-      ];
     }
 
     return $build;

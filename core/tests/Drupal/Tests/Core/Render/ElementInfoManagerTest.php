@@ -8,7 +8,6 @@
 namespace Drupal\Tests\Core\Render;
 
 use Drupal\Core\Render\ElementInfoManager;
-use Drupal\Core\Theme\ActiveTheme;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -39,31 +38,15 @@ class ElementInfoManagerTest extends UnitTestCase {
   protected $moduleHandler;
 
   /**
-   * The mocked theme manager.
-   *
-   * @var \Drupal\Core\Theme\ThemeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $themeManager;
-
-  /**
-   * The cache tags invalidator.
-   *
-   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface|\PHPUnit_Framework_MockObject_MockObject
-   */
-  protected $cacheTagsInvalidator;
-
-  /**
    * {@inheritdoc}
    *
    * @covers ::__construct
    */
   protected function setUp() {
     $this->cache = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
-    $this->cacheTagsInvalidator = $this->getMock('Drupal\Core\Cache\CacheTagsInvalidatorInterface');
     $this->moduleHandler = $this->getMock('Drupal\Core\Extension\ModuleHandlerInterface');
-    $this->themeManager = $this->getMock('Drupal\Core\Theme\ThemeManagerInterface');
 
-    $this->elementInfo = new ElementInfoManager(new \ArrayObject(), $this->cache, $this->cacheTagsInvalidator, $this->moduleHandler, $this->themeManager);
+    $this->elementInfo = new ElementInfoManager(new \ArrayObject(), $this->cache, $this->moduleHandler);
   }
 
   /**
@@ -85,19 +68,10 @@ class ElementInfoManagerTest extends UnitTestCase {
       ->will($this->returnCallback($alter_callback ?: function($info) {
         return $info;
       }));
-    $this->themeManager->expects($this->once())
-      ->method('getActiveTheme')
-      ->willReturn(new ActiveTheme(['name' => 'test']));
-    $this->themeManager->expects($this->once())
-      ->method('alter')
-      ->with('element_info', $this->anything())
-      ->will($this->returnCallback($alter_callback ?: function($info) {
-        return $info;
-      }));
 
     $this->cache->expects($this->at(0))
       ->method('get')
-      ->with('element_info_build:test')
+      ->with('element_info_build')
       ->will($this->returnValue(FALSE));
     $this->cache->expects($this->at(1))
       ->method('get')
@@ -108,7 +82,7 @@ class ElementInfoManagerTest extends UnitTestCase {
       ->with('element_info');
     $this->cache->expects($this->at(3))
       ->method('set')
-      ->with('element_info_build:test');
+      ->with('element_info_build');
 
     $this->assertEquals($expected_info, $this->elementInfo->getInfo($type));
   }
@@ -125,10 +99,12 @@ class ElementInfoManagerTest extends UnitTestCase {
       'page',
       array(
         '#type' => 'page',
+        '#show_messages' => TRUE,
         '#theme' => 'page',
         '#defaults_loaded' => TRUE,
       ),
       array('page' => array(
+        '#show_messages' => TRUE,
         '#theme' => 'page',
       )),
     );
@@ -139,6 +115,7 @@ class ElementInfoManagerTest extends UnitTestCase {
         '#defaults_loaded' => TRUE,
       ),
       array('page' => array(
+        '#show_messages' => TRUE,
         '#theme' => 'page',
       )),
     );
@@ -147,11 +124,13 @@ class ElementInfoManagerTest extends UnitTestCase {
       'page',
       array(
         '#type' => 'page',
+        '#show_messages' => TRUE,
         '#theme' => 'page',
         '#number' => 597219,
         '#defaults_loaded' => TRUE,
       ),
       array('page' => array(
+        '#show_messages' => TRUE,
         '#theme' => 'page',
       )),
       function ($alter_name, array &$info) {
@@ -183,18 +162,14 @@ class ElementInfoManagerTest extends UnitTestCase {
     $plugin->expects($this->once())
       ->method('getInfo')
       ->willReturn(array(
+        '#show_messages' => TRUE,
         '#theme' => 'page',
       ));
 
     $element_info = $this->getMockBuilder('Drupal\Core\Render\ElementInfoManager')
-      ->setConstructorArgs(array(new \ArrayObject(), $this->cache, $this->cacheTagsInvalidator, $this->moduleHandler, $this->themeManager))
+      ->setConstructorArgs(array(new \ArrayObject(), $this->cache, $this->moduleHandler))
       ->setMethods(array('getDefinitions', 'createInstance'))
       ->getMock();
-
-    $this->themeManager->expects($this->any())
-      ->method('getActiveTheme')
-      ->willReturn(new ActiveTheme(['name' => 'test']));
-
     $element_info->expects($this->once())
       ->method('createInstance')
       ->with('page')
@@ -219,6 +194,7 @@ class ElementInfoManagerTest extends UnitTestCase {
       'Drupal\Core\Render\Element\ElementInterface',
       array(
         '#type' => 'page',
+        '#show_messages' => TRUE,
         '#theme' => 'page',
         '#defaults_loaded' => TRUE,
       ),
@@ -228,6 +204,7 @@ class ElementInfoManagerTest extends UnitTestCase {
       'Drupal\Core\Render\Element\FormElementInterface',
       array(
         '#type' => 'page',
+        '#show_messages' => TRUE,
         '#theme' => 'page',
         '#input' => TRUE,
         '#value_callback' => array('TestElementPlugin', 'valueCallback'),

@@ -12,7 +12,6 @@ use Drupal\comment\Entity\Comment;
 use Drupal\comment\CommentInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
-use Drupal\node\Entity\NodeType;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -55,7 +54,7 @@ abstract class CommentTestBase extends WebTestBase {
 
     // Create an article content type only if it does not yet exist, so that
     // child classes may specify the standard profile.
-    $types = NodeType::loadMultiple();
+    $types = node_type_get_types();
     if (empty($types['article'])) {
       $this->drupalCreateContentType(array('type' => 'article', 'name' => t('Article')));
     }

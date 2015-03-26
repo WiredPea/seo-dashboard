@@ -61,11 +61,15 @@ class MigrateExecutableTest extends MigrateTestCase {
    * Tests an import with an incomplete rewinding.
    */
   public function testImportWithFailingRewind() {
+    $iterator = $this->getMock('\Iterator');
     $exception_message = $this->getRandomGenerator()->string();
-    $source = $this->getMock('Drupal\migrate\Plugin\MigrateSourceInterface');
-    $source->expects($this->once())
+    $iterator->expects($this->once())
       ->method('rewind')
       ->will($this->throwException(new \Exception($exception_message)));
+    $source = $this->getMock('Drupal\migrate\Plugin\MigrateSourceInterface');
+    $source->expects($this->any())
+      ->method('getIterator')
+      ->will($this->returnValue($iterator));
 
     $this->migration->expects($this->any())
       ->method('getSourcePlugin')
@@ -496,25 +500,20 @@ class MigrateExecutableTest extends MigrateTestCase {
   /**
    * Returns a mock migration source instance.
    *
-   * @return \Drupal\migrate\Plugin\MigrateSourceInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @return \Drupal\migrate\Source|\PHPUnit_Framework_MockObject_MockObject
    */
   protected function getMockSource() {
     $iterator = $this->getMock('\Iterator');
 
-    $class = 'Drupal\migrate\Plugin\migrate\source\SourcePluginBase';
-    $source = $this->getMockBuilder($class)
+    $source = $this->getMockBuilder('Drupal\migrate\Source')
       ->disableOriginalConstructor()
-      ->setMethods(get_class_methods($class))
-      ->getMockForAbstractClass();
+      ->getMock();
     $source->expects($this->any())
       ->method('getIterator')
       ->will($this->returnValue($iterator));
     $source->expects($this->once())
       ->method('rewind')
       ->will($this->returnValue(TRUE));
-    $source->expects($this->any())
-      ->method('initializeIterator')
-      ->will($this->returnValue([]));
     $source->expects($this->any())
       ->method('valid')
       ->will($this->onConsecutiveCalls(TRUE, FALSE));

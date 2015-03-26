@@ -1,7 +1,3 @@
-/**
- * @file
- * Vertical Tabs.
- */
 
 .vertical-tabs {
   margin: 1em 0 1em 15em; /* LTR */
@@ -11,7 +7,7 @@
    margin-left: 0;
    margin-right: 15em;
 }
-.vertical-tabs__menu {
+.vertical-tabs-list {
   float: left; /* LTR */
   width: 15em;
   margin: -1px 0 -1px -15em; /* LTR */
@@ -19,50 +15,52 @@
   border-top: 1px solid #ccc;
   list-style: none;
 }
-[dir="rtl"] .vertical-tabs__menu {
+[dir="rtl"] .vertical-tabs-list {
   float: right;
   margin-left: 0;
   margin-right: -15em;
 }
-.vertical-tabs__pane {
+.vertical-tabs-pane {
   margin: 0;
   border: 0;
 }
-.vertical-tabs__pane > summary {
+.vertical-tabs-pane > summary {
   display: none;
 }
 
-/* Layout of each tab. */
-.vertical-tabs__menu-item {
+/* Layout of each tab */
+.vertical-tab-button {
+  margin: 0;
+  padding: 0;
   border: 1px solid #ccc;
   border-top: 0;
   background: #eee;
 }
-.vertical-tabs__menu-item a {
+.vertical-tab-button a {
   display: block;
   padding: 0.5em 0.6em;
   text-decoration: none;
 }
-.vertical-tabs__menu-item a:focus .vertical-tabs__menu-item-title,
-.vertical-tabs__menu-item a:active .vertical-tabs__menu-item-title,
-.vertical-tabs__menu-item a:hover .vertical-tabs__menu-item-title {
+.vertical-tab-button a:focus strong,
+.vertical-tab-button a:active strong,
+.vertical-tab-button a:hover strong {
   text-decoration: underline;
 }
-.vertical-tabs__menu-item a:hover {
+.vertical-tab-button a:hover {
   outline: 1px dotted;
 }
-.vertical-tabs__menu-item.is-selected {
+.vertical-tab-button.selected {
   border-right-width: 0; /* LTR */
   background-color: #fff;
 }
-[dir="rtl"] .vertical-tabs__menu-item.is-selected {
+[dir="rtl"] .vertical-tab-button.selected {
   border-left-width: 0;
   border-right-width: 1px;
 }
-.vertical-tabs__menu-item.is-selected .vertical-tabs__menu-item-title {
+.vertical-tab-button.selected strong {
   color: #000;
 }
-.vertical-tabs__menu-item-summary {
+.vertical-tab-button .summary {
   display: block;
   margin-bottom: 0;
   line-height: normal;

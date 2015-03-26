@@ -91,14 +91,6 @@ interface SearchInterface extends PluginInspectionInterface {
   public function suggestedTitle();
 
   /**
-   * Returns the searching help.
-   *
-   * @return array
-   *   Render array for the searching help.
-   */
-  public function getHelp();
-
-  /**
    * Alters the search form when being built for a given plugin.
    *
    * The core search module only invokes this method on active module plugins

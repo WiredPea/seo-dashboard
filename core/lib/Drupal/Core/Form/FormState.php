@@ -1241,7 +1241,6 @@ class FormState implements FormStateInterface {
         unset($values[$last_parent]);
       }
     }
-    return $this;
   }
 
   /**

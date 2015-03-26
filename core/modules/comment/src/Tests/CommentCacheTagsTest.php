@@ -12,7 +12,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\system\Tests\Entity\EntityWithUriCacheTagsTestBase;
 use Drupal\user\Entity\Role;
-use Drupal\user\RoleInterface;
 
 /**
  * Tests the Comment entity's cache tags.
@@ -36,7 +35,7 @@ class CommentCacheTagsTest extends EntityWithUriCacheTagsTestBase {
 
     // Give anonymous users permission to view comments, so that we can verify
     // the cache tags of cached versions of comment pages.
-    $user_role = Role::load(RoleInterface::ANONYMOUS_ID);
+    $user_role = Role::load(DRUPAL_ANONYMOUS_RID);
     $user_role->grantPermission('access comments');
     $user_role->save();
   }

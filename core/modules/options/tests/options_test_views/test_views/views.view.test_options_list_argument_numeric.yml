@@ -11,7 +11,7 @@ label: 'test options list argument (numeric)'
 module: views
 description: ''
 tag: ''
-base_table: node_field_data
+base_table: node
 base_field: nid
 core: 8.x
 display:
@@ -72,6 +72,7 @@ display:
             html: false
           hide_empty: false
           empty_zero: false
+          link_to_node: true
           relationship: none
           group_type: group
           admin_label: ''
@@ -86,7 +87,7 @@ display:
           element_default_classes: true
           empty: ''
           hide_alter_empty: true
-          plugin_id: field
+          plugin_id: node
       filters:
         status:
           value: true

@@ -15,18 +15,14 @@ namespace Drupal\file\Tests;
 class ValidatorTest extends FileManagedUnitTestBase {
 
   /**
-   * An image file.
-   *
-   * @var \Drupal\file\FileInterface
+   * @var \Drupal\file\Entity\File
    */
   protected $image;
 
   /**
-   * A file which is not an image.
-   *
    * @var \Drupal\file\Entity\File
    */
-  protected $nonImage;
+  protected $non_image;
 
   protected function setUp() {
     parent::setUp();
@@ -35,9 +31,9 @@ class ValidatorTest extends FileManagedUnitTestBase {
     $this->image->setFileUri('core/misc/druplicon.png');
     $this->image->setFilename(drupal_basename($this->image->getFileUri()));
 
-    $this->nonImage = entity_create('file');
-    $this->nonImage->setFileUri('core/assets/vendor/jquery/jquery.min.js');
-    $this->nonImage->setFilename(drupal_basename($this->nonImage->getFileUri()));
+    $this->non_image = entity_create('file');
+    $this->non_image->setFileUri('core/assets/vendor/jquery/jquery.min.js');
+    $this->non_image->setFilename(drupal_basename($this->non_image->getFileUri()));
   }
 
   /**
@@ -61,8 +57,8 @@ class ValidatorTest extends FileManagedUnitTestBase {
     $errors = file_validate_is_image($this->image);
     $this->assertEqual(count($errors), 0, 'No error reported for our image file.', 'File');
 
-    $this->assertTrue(file_exists($this->nonImage->getFileUri()), 'The non-image being tested exists.', 'File');
-    $errors = file_validate_is_image($this->nonImage);
+    $this->assertTrue(file_exists($this->non_image->getFileUri()), 'The non-image being tested exists.', 'File');
+    $errors = file_validate_is_image($this->non_image);
     $this->assertEqual(count($errors), 1, 'An error reported for our non-image file.', 'File');
   }
 
@@ -72,9 +68,9 @@ class ValidatorTest extends FileManagedUnitTestBase {
    */
   function testFileValidateImageResolution() {
     // Non-images.
-    $errors = file_validate_image_resolution($this->nonImage);
+    $errors = file_validate_image_resolution($this->non_image);
     $this->assertEqual(count($errors), 0, 'Should not get any errors for a non-image file.', 'File');
-    $errors = file_validate_image_resolution($this->nonImage, '50x50', '100x100');
+    $errors = file_validate_image_resolution($this->non_image, '50x50', '100x100');
     $this->assertEqual(count($errors), 0, 'Do not check the resolution on non files.', 'File');
 
     // Minimum size.

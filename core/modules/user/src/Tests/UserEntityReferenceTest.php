@@ -7,7 +7,6 @@
 
 namespace Drupal\user\Tests;
 
-use Drupal\entity_reference\Tests\EntityReferenceTestTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
 
@@ -17,8 +16,6 @@ use Drupal\system\Tests\Entity\EntityUnitTestBase;
  * @group user
  */
 class UserEntityReferenceTest extends EntityUnitTestBase {
-
-  use EntityReferenceTestTrait;
 
   /**
    * A randomly-generated role for testing purposes.
@@ -59,7 +56,7 @@ class UserEntityReferenceTest extends EntityUnitTestBase {
     ));
     $this->role2->save();
 
-    $this->createEntityReferenceField('user', 'user', 'user_reference', 'User reference', 'user');
+    entity_reference_create_field('user', 'user', 'user_reference', 'User reference', 'user');
   }
 
   /**

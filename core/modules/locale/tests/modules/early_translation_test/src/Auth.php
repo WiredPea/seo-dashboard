@@ -10,6 +10,7 @@ namespace Drupal\early_translation_test;
 use Drupal\Core\Authentication\AuthenticationProviderInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 
 /**
  * Test authentication provider.
@@ -50,6 +51,18 @@ class Auth implements AuthenticationProviderInterface {
    */
   public function authenticate(Request $request) {
     return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function cleanup(Request $request) {}
+
+  /**
+   * {@inheritdoc}
+   */
+  public function handleException(GetResponseForExceptionEvent $event) {
+    return FALSE;
   }
 
 }

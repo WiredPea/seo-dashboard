@@ -9,10 +9,10 @@ namespace Drupal\options\Plugin\views\argument;
 
 use Drupal\Core\Field\AllowedTagsXssTrait;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\views\FieldAPIHandlerTrait;
+use Drupal\field\Views\FieldAPIHandlerTrait;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
-use Drupal\views\Plugin\views\argument\StringArgument;
+use Drupal\views\Plugin\views\argument\String;
 use Drupal\Component\Utility\String as StringUtility;
 
 /**
@@ -22,7 +22,7 @@ use Drupal\Component\Utility\String as StringUtility;
  *
  * @ViewsArgument("string_list_field")
  */
-class StringListField extends StringArgument {
+class StringListField extends String {
 
   use AllowedTagsXssTrait;
   use FieldAPIHandlerTrait;

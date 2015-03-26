@@ -7,8 +7,7 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
-use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
-use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\TypedData\TranslatableInterface;
 
@@ -18,26 +17,15 @@ use Drupal\Core\TypedData\TranslatableInterface;
 abstract class EntityReferenceFormatterBase extends FormatterBase {
 
   /**
-   * Returns the referenced entities for display.
+   * Returns the accessible and translated entities for view.
    *
-   * The method takes care of:
-   * - checking entity access,
-   * - placing the entities in the language expected for display.
-   * It is thus strongly recommended that formatters use it in their
-   * implementation of viewElements($items) rather than dealing with $items
-   * directly.
-   *
-   * For each entity, the EntityReferenceItem by which the entity is referenced
-   * is available in $entity->_referringItem. This is useful for field types
-   * that store additional values next to the reference itself.
-   *
-   * @param \Drupal\Core\Field\EntityReferenceFieldItemListInterface $items
+   * @param \Drupal\Core\Field\FieldItemListInterface $items
    *   The item list.
    *
    * @return \Drupal\Core\Entity\EntityInterface[]
-   *   The array of referenced entities to display, keyed by delta.
+   *   The entities to view.
    */
-  protected function getEntitiesToView(EntityReferenceFieldItemListInterface $items) {
+  protected function getEntitiesToView(FieldItemListInterface $items) {
     $entities = array();
 
     $parent_entity_langcode = $items->getEntity()->language()->getId();
@@ -51,10 +39,8 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
           $entity = $entity->getTranslation($parent_entity_langcode);
         }
 
-        // Check entity access if needed.
-        if (!$this->needsAccessCheck($item) || $entity->access('view')) {
-          // Add the referring item, in case the formatter needs it.
-          $entity->_referringItem = $items[$delta];
+        // Check entity access.
+        if ($entity->access('view')) {
           $entities[$delta] = $entity;
         }
       }
@@ -70,9 +56,10 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
    * viewed.
    */
   public function prepareView(array $entities_items) {
-    // Collect entity IDs to load. For performance, we want to use a single
-    // "multiple entity load" to load all the entities for the multiple
-    // "entity reference item lists" being displayed. We thus cannot use
+    // Load the existing (non-autocreate) entities. For performance, we want to
+    // use a single "multiple entity load" to load all the entities for the
+    // multiple "entity reference item lists" that are being displayed. We thus
+    // cannot use
     // \Drupal\Core\Field\EntityReferenceFieldItemList::referencedEntities().
     $ids = array();
     foreach ($entities_items as $items) {
@@ -82,7 +69,7 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
         // contains a valid entity ready for display. All items are initialized
         // at FALSE.
         $item->_loaded = FALSE;
-        if ($this->needsEntityLoad($item)) {
+        if ($item->target_id !== NULL) {
           $ids[] = $item->target_id;
         }
       }
@@ -105,32 +92,6 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
         }
       }
     }
-  }
-
-  /**
-   * Returns whether the entity referenced by an item needs to be loaded.
-   *
-   * @param \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem $item
-   *    The item to check.
-   *
-   * @return bool
-   *   TRUE if the entity needs to be loaded.
-   */
-  protected function needsEntityLoad(EntityReferenceItem $item) {
-    return !$item->hasNewEntity();
-  }
-
-  /**
-   * Returns whether entity access should be checked.
-   *
-   * @param \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem $item
-   *    The item to check.
-   *
-   * @return bool
-   *   TRUE if entity access should be checked.
-   */
-  protected function needsAccessCheck(EntityReferenceItem $item) {
-    return TRUE;
   }
 
 }

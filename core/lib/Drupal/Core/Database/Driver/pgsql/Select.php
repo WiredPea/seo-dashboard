@@ -52,15 +52,11 @@ class Select extends QuerySelect {
    * directly in SelectQuery::orderBy().
    */
   public function orderBy($field, $direction = 'ASC') {
-    // Only allow ASC and DESC, default to ASC.
-    // Emulate MySQL default behavior to sort NULL values first for ascending,
-    // and last for descending.
-    // @see http://www.postgresql.org/docs/9.3/static/queries-order.html
-    $direction = strtoupper($direction) == 'DESC' ? 'DESC NULLS LAST' : 'ASC NULLS FIRST';
-    $this->order[$field] = $direction;
+    // Call parent function to order on this.
+    $return = parent::orderBy($field, $direction);
 
     if ($this->hasTag('entity_query')) {
-      return $this;
+      return $return;
     }
 
     // If there is a table alias specified, split it up.
@@ -72,22 +68,22 @@ class Select extends QuerySelect {
       if (!empty($table)) {
         // If table alias is given, check if field and table exists.
         if ($existing_field['table'] == $table && $existing_field['field'] == $table_field) {
-          return $this;
+          return $return;
         }
       }
       else {
         // If there is no table, simply check if the field exists as a field or
         // an aliased field.
         if ($existing_field['alias'] == $field) {
-          return $this;
+          return $return;
         }
       }
     }
 
     // Also check expression aliases.
     foreach ($this->expressions as $expression) {
-      if ($expression['alias'] == $this->connection->escapeAlias($field)) {
-        return $this;
+      if ($expression['alias'] == $field) {
+        return $return;
       }
     }
 
@@ -97,7 +93,7 @@ class Select extends QuerySelect {
     // actually belongs to a different table, it must be added manually.
     foreach ($this->tables as $table) {
       if (!empty($table['all_fields'])) {
-        return $this;
+        return $return;
       }
     }
 
@@ -105,37 +101,12 @@ class Select extends QuerySelect {
     // it is considered an expression, these can't be handled automatically
     // either.
     if ($this->connection->escapeField($field) != $field) {
-      return $this;
+      return $return;
     }
 
     // This is a case that can be handled automatically, add the field.
     $this->addField(NULL, $field);
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function addExpression($expression, $alias = NULL, $arguments = array()) {
-    if (empty($alias)) {
-      $alias = 'expression';
-    }
-
-    // This implements counting in the same manner as the parent method.
-    $alias_candidate = $alias;
-    $count = 2;
-    while (!empty($this->expressions[$alias_candidate])) {
-      $alias_candidate = $alias . '_' . $count++;
-    }
-    $alias = $alias_candidate;
-
-    $this->expressions[$alias] = array(
-      'expression' => $expression,
-      'alias' => $this->connection->escapeAlias($alias_candidate),
-      'arguments' => $arguments,
-    );
-
-    return $alias;
+    return $return;
   }
 
   /**

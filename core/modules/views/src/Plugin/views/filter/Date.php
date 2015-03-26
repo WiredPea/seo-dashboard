@@ -16,7 +16,7 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * @ViewsFilter("date")
  */
-class Date extends NumericFilter {
+class Date extends Numeric {
 
   protected function defineOptions() {
     $options = parent::defineOptions();

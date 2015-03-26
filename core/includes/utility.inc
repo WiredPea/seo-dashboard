@@ -15,6 +15,8 @@ use Composer\Autoload\ClassLoader;
 /**
  * Rebuilds all caches even when Drupal itself does not work.
  *
+ * Requires DRUPAL_BOOTSTRAP_CONFIGURATION.
+ *
  * @param \Composer\Autoload\ClassLoader $classloader
  *   The classloader.
  * @param \Symfony\Component\HttpFoundation\Request $request

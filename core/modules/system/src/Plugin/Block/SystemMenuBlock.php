@@ -83,7 +83,7 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
     $defaults = $this->defaultConfiguration();
     $form['menu_levels'] = array(
       '#type' => 'details',
-      '#title' => $this->t('Menu levels'),
+      '#title' => t('Menu levels'),
       // Open if not set to defaults.
       '#open' => $defaults['level'] !== $config['level'] || $defaults['depth'] !== $config['depth'],
       '#process' => [[get_class(), 'processMenuLevelParents']],
@@ -201,7 +201,7 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
     $menu_name = $this->getDerivativeId();
     return [
       'user.roles',
-      'route.menu_active_trails:' . $menu_name,
+      'menu.active_trail:' . $menu_name,
     ];
   }
 

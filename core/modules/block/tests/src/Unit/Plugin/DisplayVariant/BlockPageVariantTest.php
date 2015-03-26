@@ -70,28 +70,23 @@ class BlockPageVariantTest extends UnitTestCase {
   public function providerBuild() {
     $blocks_config = array(
       'block1' => array(
-        // region, is main content block, is messages block
-        'top', FALSE, FALSE,
+        'top', FALSE,
       ),
       // Test multiple blocks in the same region.
       'block2' => array(
-        'bottom', FALSE, FALSE,
+        'bottom', FALSE,
       ),
       'block3' => array(
-        'bottom', FALSE, FALSE,
+        'bottom', FALSE,
       ),
       // Test a block implementing MainContentBlockPluginInterface.
       'block4' => array(
-        'center', TRUE, FALSE,
-      ),
-      // Test a block implementing MessagesBlockPluginInterface.
-      'block5' => array(
-        'center', FALSE, TRUE,
+        'center', TRUE,
       ),
     );
 
     $test_cases = [];
-    $test_cases[] = [$blocks_config, 5,
+    $test_cases[] = [$blocks_config, 4,
       [
         '#cache' => [
           'tags' => [
@@ -105,44 +100,12 @@ class BlockPageVariantTest extends UnitTestCase {
         // The main content was rendered via a block.
         'center' => [
           'block4' => [],
-          'block5' => [],
           '#sorted' => TRUE,
         ],
         'bottom' => [
           'block2' => [],
           'block3' => [],
           '#sorted' => TRUE,
-        ],
-      ],
-    ];
-    unset($blocks_config['block5']);
-    $test_cases[] = [$blocks_config, 4,
-      [
-        '#cache' => [
-          'tags' => [
-            'config:block_list',
-          ],
-        ],
-        'top' => [
-          'block1' => [],
-          '#sorted' => TRUE,
-        ],
-        'center' => [
-          'block4' => [],
-          '#sorted' => TRUE,
-        ],
-        'bottom' => [
-          'block2' => [],
-          'block3' => [],
-          '#sorted' => TRUE,
-        ],
-        // The messages are rendered via the fallback in case there is no block
-        // rendering the main content.
-        'content' => [
-          'messages' => [
-            '#weight' => -1000,
-            '#type' => 'status_messages',
-          ],
         ],
       ],
     ];
@@ -163,14 +126,10 @@ class BlockPageVariantTest extends UnitTestCase {
           'block3' => [],
           '#sorted' => TRUE,
         ],
-        // The main content & messages are rendered via the fallback in case
-        // there are no blocks rendering them.
+        // The main content was rendered via the fallback in case there is no
+        // block rendering the main content.
         'content' => [
           'system_main' => ['#markup' => 'Hello kittens!'],
-          'messages' => [
-            '#weight' => -1000,
-            '#type' => 'status_messages',
-          ],
         ],
       ],
     ];
@@ -191,12 +150,11 @@ class BlockPageVariantTest extends UnitTestCase {
     $blocks = ['top' => [], 'center' => [], 'bottom' => []];
     $block_plugin = $this->getMock('Drupal\Core\Block\BlockPluginInterface');
     $main_content_block_plugin = $this->getMock('Drupal\Core\Block\MainContentBlockPluginInterface');
-    $messages_block_plugin = $this->getMock('Drupal\Core\Block\MessagesBlockPluginInterface');
     foreach ($blocks_config as $block_id => $block_config) {
       $block = $this->getMock('Drupal\block\BlockInterface');
       $block->expects($this->atLeastOnce())
         ->method('getPlugin')
-        ->willReturn($block_config[1] ? $main_content_block_plugin : ($block_config[2] ? $messages_block_plugin : $block_plugin));
+        ->willReturn($block_config[1] ? $main_content_block_plugin : $block_plugin);
       $blocks[$block_config[0]][$block_id] = $block;
     }
 
@@ -229,10 +187,6 @@ class BlockPageVariantTest extends UnitTestCase {
       ],
       'content' => [
         'system_main' => [],
-        'messages' => [
-          '#weight' => -1000,
-          '#type' => 'status_messages',
-        ],
       ],
     ];
     $this->assertSame($expected, $display_variant->build());

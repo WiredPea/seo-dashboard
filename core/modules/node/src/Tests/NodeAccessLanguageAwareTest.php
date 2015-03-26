@@ -56,6 +56,10 @@ class NodeAccessLanguageAwareTest extends NodeTestBase {
       'entity_type' => 'node',
       'type' => 'boolean',
       'cardinality' => 1,
+      'settings' => array(
+        'on_label' => 'Private',
+        'off_label' => 'Not private',
+      ),
     ));
     $field_storage->save();
 
@@ -64,10 +68,6 @@ class NodeAccessLanguageAwareTest extends NodeTestBase {
       'bundle' => 'page',
       'widget' => array(
         'type' => 'options_buttons',
-      ),
-      'settings' => array(
-        'on_label' => 'Private',
-        'off_label' => 'Not private',
       ),
     ))->save();
 

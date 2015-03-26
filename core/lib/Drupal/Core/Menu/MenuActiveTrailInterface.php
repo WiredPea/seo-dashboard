@@ -18,9 +18,8 @@ interface MenuActiveTrailInterface {
   /**
    * Gets the active trail IDs of the specified menu tree.
    *
-   * @param string|NULL $menu_name
-   *   (optional) The menu name of the requested tree. If omitted, all menu
-   *   trees will be searched.
+   * @param string $menu_name
+   *   The menu name of the requested tree.
    *
    * @return array
    *   An array containing the active trail: a list of plugin IDs.

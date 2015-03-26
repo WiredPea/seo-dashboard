@@ -34,8 +34,6 @@ class TextDefaultFormatter extends FormatterBase {
   public function viewElements(FieldItemListInterface $items) {
     $elements = array();
 
-    // The ProcessedText element already handles cache context & tag bubbling.
-    // @see \Drupal\filter\Element\ProcessedText::preRenderText()
     foreach ($items as $delta => $item) {
       $elements[$delta] = array(
         '#type' => 'processed_text',

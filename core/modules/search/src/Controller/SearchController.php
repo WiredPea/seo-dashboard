@@ -109,11 +109,17 @@ class SearchController extends ControllerBase {
       );
     }
 
+    $no_results = t('<ul>
+    <li>Check if your spelling is correct.</li>
+    <li>Remove quotes around phrases to search for each word individually. <em>bike shed</em> will often show more results than <em>&quot;bike shed&quot;</em>.</li>
+    <li>Consider loosening your query with <em>OR</em>. <em>bike OR shed</em> will often show more results than <em>bike shed</em>.</li>
+    </ul>');
     $build['search_results'] = array(
       '#theme' => array('item_list__search_results__' . $plugin->getPluginId(), 'item_list__search_results'),
       '#items' => $results,
       '#empty' => array(
-        '#markup' => '<h3>' . $this->t('Your search yielded no results.') . '</h3>',
+        // @todo Revisit where this help text is added.
+        '#markup' => '<h3>' . $this->t('Your search yielded no results.') . '</h3>' . $no_results,
       ),
       '#list_type' => 'ol',
       '#attributes' => array(
@@ -128,29 +134,10 @@ class SearchController extends ControllerBase {
     );
 
     $build['pager'] = array(
-      '#type' => 'pager',
+      '#theme' => 'pager',
     );
 
     $build['#attached']['library'][] = 'search/drupal.search.results';
-
-    return $build;
-  }
-
-  /**
-   * Creates a render array for the search help page.
-   *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
-   * @param \Drupal\search\SearchPageInterface $entity
-   *   The search page entity.
-   *
-   * @return array
-   *   The search help page.
-   */
-  public function searchHelp(SearchPageInterface $entity) {
-    $build = array();
-
-    $build['search_help'] = $entity->getPlugin()->getHelp();
 
     return $build;
   }

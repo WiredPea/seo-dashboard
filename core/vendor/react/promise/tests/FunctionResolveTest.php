@@ -91,12 +91,4 @@ class FunctionResolveTest extends TestCase
 
         $result->then($mock);
     }
-
-    /** @test */
-    public function returnsExtendePromiseForSimplePromise()
-    {
-        $promise = $this->getMock('React\Promise\PromiseInterface');
-
-        $this->assertInstanceOf('React\Promise\ExtendedPromiseInterface', resolve($promise));
-    }
 }

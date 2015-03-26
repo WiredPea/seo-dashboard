@@ -44,25 +44,11 @@ class NodeCacheTagsTest extends EntityWithUriCacheTagsTestBase {
 
   /**
    * {@inheritdoc}
-   */
-  protected function getAdditionalCacheContextsForEntity(EntityInterface $entity) {
-    return ['timezone'];
-  }
-
-  /**
-   * {@inheritdoc}
    *
    * Each node must have an author.
    */
   protected function getAdditionalCacheTagsForEntity(EntityInterface $node) {
     return array('user:' . $node->getOwnerId(), 'user_view');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getAdditionalCacheContextsForEntityListing() {
-    return ['user.node_grants:view'];
   }
 
 }

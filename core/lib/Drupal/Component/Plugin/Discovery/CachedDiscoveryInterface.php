@@ -21,17 +21,4 @@ interface CachedDiscoveryInterface extends DiscoveryInterface {
    */
   public function clearCachedDefinitions();
 
-  /**
-   * Disable the use of caches.
-   *
-   * Can be used to ensure that uncached plugin definitions are returned,
-   * without invalidating all cached information.
-   *
-   * This will also remove all local/static caches.
-   *
-   * @param bool $use_caches
-   *   FALSE to not use any caches.
-   */
-  public function useCaches($use_caches = FALSE);
-
 }

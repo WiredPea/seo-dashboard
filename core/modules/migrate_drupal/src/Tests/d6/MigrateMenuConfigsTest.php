@@ -46,7 +46,7 @@ class MigrateMenuConfigsTest extends MigrateDrupal6TestBase {
    */
   public function testMenuSettings() {
     $config = $this->config('menu_ui.settings');
-    $this->assertIdentical(FALSE, $config->get('override_parent_selector'));
+    $this->assertIdentical($config->get('override_parent_selector'), FALSE);
     $this->assertConfigSchema(\Drupal::service('config.typed'), 'menu_ui.settings', $config->get());
   }
 

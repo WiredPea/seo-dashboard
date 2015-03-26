@@ -9,7 +9,6 @@ namespace Drupal\filter\Tests;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\simpletest\WebTestBase;
-use Drupal\user\RoleInterface;
 
 /**
  * Tests hooks for text formats insert/update/disable.
@@ -45,7 +44,7 @@ class FilterHooksTest extends WebTestBase {
     $edit = array();
     $edit['format'] = Unicode::strtolower($this->randomMachineName());
     $edit['name'] = $name;
-    $edit['roles[' . RoleInterface::ANONYMOUS_ID . ']'] = 1;
+    $edit['roles[' . DRUPAL_ANONYMOUS_RID . ']'] = 1;
     $this->drupalPostForm('admin/config/content/formats/add', $edit, t('Save configuration'));
     $this->assertRaw(t('Added text format %format.', array('%format' => $name)));
     $this->assertText('hook_filter_format_insert invoked.');
@@ -54,7 +53,7 @@ class FilterHooksTest extends WebTestBase {
 
     // Update text format.
     $edit = array();
-    $edit['roles[' . RoleInterface::AUTHENTICATED_ID . ']'] = 1;
+    $edit['roles[' . DRUPAL_AUTHENTICATED_RID . ']'] = 1;
     $this->drupalPostForm('admin/config/content/formats/manage/' . $format_id, $edit, t('Save configuration'));
     $this->assertRaw(t('The text format %format has been updated.', array('%format' => $name)));
     $this->assertText('hook_filter_format_update invoked.');

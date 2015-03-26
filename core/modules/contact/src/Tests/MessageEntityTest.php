@@ -7,7 +7,7 @@
 namespace Drupal\contact\Tests;
 
 use Drupal\contact\Entity\Message;
-use Drupal\system\Tests\Entity\EntityUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Tests the message entity class.
@@ -15,7 +15,7 @@ use Drupal\system\Tests\Entity\EntityUnitTestBase;
  * @group contact
  * @see \Drupal\contact\Entity\Message
  */
-class MessageEntityTest extends EntityUnitTestBase {
+class MessageEntityTest extends KernelTestBase {
 
   /**
    * Modules to enable.
@@ -32,7 +32,7 @@ class MessageEntityTest extends EntityUnitTestBase {
 
   protected function setUp() {
     parent::setUp();
-    $this->installConfig(array('contact', 'contact_test'));
+    $this->installConfig(array('contact'));
   }
 
   /**
@@ -62,15 +62,6 @@ class MessageEntityTest extends EntityUnitTestBase {
     $this->assertEqual($message->getSenderName(), 'sender_name');
     $this->assertEqual($message->getSenderMail(), 'sender_mail');
     $this->assertTrue($message->copySender());
-
-    $no_access_user = $this->createUser(['uid' => 2]);
-    $access_user = $this->createUser(['uid' => 3], ['access site-wide contact form']);
-    $admin = $this->createUser(['uid' => 4], ['administer contact forms']);
-
-    $this->assertFalse(\Drupal::entityManager()->getAccessControlHandler('contact_message')->createAccess(NULL, $no_access_user));
-    $this->assertTrue(\Drupal::entityManager()->getAccessControlHandler('contact_message')->createAccess(NULL, $access_user));
-    $this->assertTrue($message->access('edit', $admin));
-    $this->assertFalse($message->access('edit', $access_user));
   }
 
 }

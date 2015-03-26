@@ -10,7 +10,6 @@ namespace Drupal\rdf\Tests;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\Tests\CommentTestBase;
-use Drupal\user\RoleInterface;
 
 /**
  * Tests the RDFa markup of comments.
@@ -44,7 +43,7 @@ class CommentAttributesTest extends CommentTestBase {
     parent::setUp();
 
     // Enables anonymous user comments.
-    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, array(
+    user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
       'access comments' => TRUE,
       'post comments' => TRUE,
       'skip comment approval' => TRUE,
