@@ -1,0 +1,5 @@
+_assetic:
+    resource: .
+    type: assetic
+_app:
+    resource: /Users/noe/git/seo-dashboard/app/config/routing_dev.yml
