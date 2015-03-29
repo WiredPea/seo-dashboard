@@ -1,0 +1,4 @@
+name = WiredPea Google analytics API
+description = Integrates the Google analytics API on a per user basis.
+core = 7.x
+package = WiredPea

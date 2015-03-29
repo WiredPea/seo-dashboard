@@ -1,0 +1,15 @@
+{
+  "name": "wiredpea/google_analytics_api",
+  "description": "Integrates Drupal with the google analytics api",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Noë Snaterse",
+      "email": "noe@wiredpea.com"
+    }
+  ],
+  "require": {
+    "google/apiclient": "1.1.2"
+  }
+}
