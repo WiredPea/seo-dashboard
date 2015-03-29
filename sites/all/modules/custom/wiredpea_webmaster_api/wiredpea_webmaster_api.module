@@ -1,0 +1,63 @@
+<?php
+
+/**
+ * @file
+ * Implements the Google Webmaster API.
+ */
+
+$google_api_path = wiredpea_webmaster_api_load_library();
+if ($google_api_path) {
+    require_once($google_api_path);
+}
+else {
+    drupal_set_message(t('The Google client library was not found. Please install that first.'));
+}
+
+/**
+ * Loads the Google API php library.
+ */
+function wiredpea_webmaster_api_load_library() {
+    $file = 'autoload.php';
+    $library = 'google-api-php-client-1.1.2';
+
+    if (module_exists('libraries') && function_exists('libraries_get_path')) {
+        $library_path = libraries_get_path($library) . "/{$file}";
+        if (file_exists($library_path)) {
+            return $library_path;
+        }
+    }
+
+    return FALSE;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function wiredpea_webmaster_api_menu() {
+    $items = array();
+
+    $items['links'] = array(
+        'page callback' => 'wiredpea_webmaster_api_overview_page',
+        'access callback' => TRUE,
+    );
+
+    return $items;
+}
+
+function wiredpea_webmaster_api_overview_page() {
+    global $user;
+    $full_user = user_load($user->uid);
+    $api_token = field_get_items('user', $full_user, 'field_google_analytics_api_key');
+
+    $client = new Google_Client();
+    $client->setAuthConfig($api_token[0]['value']);
+    $client->setScopes(array('https://www.googleapis.com/auth/analytics.readonly'));
+
+    $webmaster = new Google_Service_Webmasters($client);
+    $sites = $webmaster->sites;
+    $sitemaps = $webmaster->sitemaps;
+
+    $list = $sites->listSites();
+
+    return $sitemaps;
+}

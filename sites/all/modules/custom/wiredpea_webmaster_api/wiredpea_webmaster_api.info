@@ -1,0 +1,6 @@
+name = Webmaster API
+description = Connects to the Google webmaster API
+core = 7.x
+package = WiredPea
+
+dependencies[] = libraries
