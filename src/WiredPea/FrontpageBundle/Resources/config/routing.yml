@@ -1,4 +1,0 @@
-wired_pea_frontpage_homepage:
-    path:     /
-    methods: [ get ]
-    defaults: { _controller: WiredPeaFrontpageBundle:Default:index }

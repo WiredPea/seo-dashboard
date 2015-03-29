@@ -1,6 +1,0 @@
-vendor/*
-composer.lock
-app/config/parameters.yml
-app/logs/*
-app/cache/*
-web/config.php
