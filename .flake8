@@ -1,0 +1,23 @@
+[flake8]
+max-line-length = 120
+ignore =
+    W503,
+    # Ignoring whitespace in slices as flake8 doesn't handle it well but black does
+    E203,
+    # Ignoring indented declaration of values as we have a configuration rich project and this helps with legibility
+    E222,
+    E241,
+    E261,
+    # Ignoring line length as we have a configuration rich project and this helps with legibility
+    E501,
+    # Ignoring objects that are not referenced as this happens a LOT in CDK
+    F841,
+    # Ignore unused imports as we try to use a common import stack
+    F401,
+    # Why should comments not be indented on their properly indented location?
+    E116,
+    # Indentation errors aplenty when manually building graphql queries
+    E131,
+exclude =
+    .git
+    node_modules
