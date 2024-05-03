@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  dashboard_database:
+    image: postgres:12
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_DATABASE: postgres
+      POSTGRES_USER: dashboard
+    ports:
+      - "5431:5432"
