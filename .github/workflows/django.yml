@@ -17,6 +17,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        permissions: 'write'
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
       with:
@@ -29,7 +31,8 @@ jobs:
       run: |
         poetry run flake8 ./
         poetry run black --check .
-        poetry run pylama --ignore=D212,V107 --linters eradicate,mccabe,mypy,pycodestyle,pydocstyle,pyflakes,pylint,radon,vulture,isort ./[
+        poetry run pylama --ignore=D212,V107 --linters eradicate,mccabe,mypy,pycodestyle,pydocstyle,pyflakes,pylint,radon,vulture,isort ./
+        poetry run coverage run ./manage.py test
     - name: Run Tests
       run: |
         poetry run ./manage.py test
