@@ -31,7 +31,7 @@ jobs:
       run: |
         poetry run flake8 ./
         poetry run black --check .
-        poetry run pylama --ignore=D212,V107,D203,D204,V102,V105,C0103 --linters eradicate,mccabe,mypy,pycodestyle,pydocstyle,pyflakes,pylint,radon,vulture,isort ./
+        poetry run pylama --ignore=D212,D203,D204,V107,V102,V105,C0103 --linters eradicate,mccabe,mypy,pycodestyle,pydocstyle,pyflakes,pylint,radon,vulture,isort ./
     - name: Run Tests
       run: |
         poetry run ./manage.py test --settings=seodashboard.testsettings
