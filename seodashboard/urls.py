@@ -25,6 +25,8 @@ from rest_framework import routers, serializers, viewsets
 
 from users.models import CustomUser
 
+from .views import index
+
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     """Serializer for the User model."""
@@ -48,6 +50,8 @@ router = routers.DefaultRouter()
 router.register(r"users", UserViewSet)
 
 urlpatterns = [
+    path("__reload__/", include("django_browser_reload.urls")),
     path("admin/", admin.site.urls),
     path("api-auth/", include("rest_framework.urls")),
+    path("", index, name="index"),
 ]

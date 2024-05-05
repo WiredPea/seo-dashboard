@@ -3,3 +3,6 @@
 __pycache__/*
 db.sqlite3
 .coverage
+
+static/src/output.css
+static/CACHE
